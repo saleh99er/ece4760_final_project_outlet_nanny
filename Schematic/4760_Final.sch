@@ -1,0 +1,394 @@
+EESchema Schematic File Version 4
+LIBS:4760_Final-cache
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 2
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+Text GLabel 2000 4300 2    50   Input ~ 0
+HOT_AC
+$Comp
+L Relay:DIPxx-1Axx-12x K?
+U 1 1 5D9D0B46
+P 3900 3650
+F 0 "K?" V 3333 3650 50  0000 C CNN
+F 1 "RENAME LATER" V 3424 3650 50  0000 C CNN
+F 2 "Relay_THT:Relay_StandexMeder_DIP_LowProfile" H 4250 3600 50  0001 L CNN
+F 3 "https://standexelectronics.com/wp-content/uploads/datasheet_reed_relay_DIP.pdf" H 3900 3650 50  0001 C CNN
+	1    3900 3650
+	0    1    1    0   
+$EndComp
+$Sheet
+S 2900 5250 650  500 
+U 5D9D433E
+F0 "pseudo5VBrick.sch" 50
+F1 "psuedo5VBrick.sch" 50
+F2 "V_AC" I L 2900 5350 50 
+F3 "GND" I L 2900 5600 50 
+F4 "5V_DC" I R 3550 5350 50 
+F5 "GND_DC" O R 3550 5600 50 
+$EndSheet
+Wire Wire Line
+	2600 4950 2600 5600
+Wire Wire Line
+	2600 5600 2900 5600
+$Comp
+L power:+5V #PWR?
+U 1 1 5D9D5323
+P 4000 5250
+F 0 "#PWR?" H 4000 5100 50  0001 C CNN
+F 1 "+5V" H 4015 5423 50  0000 C CNN
+F 2 "" H 4000 5250 50  0001 C CNN
+F 3 "" H 4000 5250 50  0001 C CNN
+	1    4000 5250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4000 5250 4000 5350
+Wire Wire Line
+	3550 5350 4000 5350
+$Comp
+L MCU_Module:RaspberryPi-CM1 U?
+U 1 1 5D9D65A8
+P 16950 2650
+F 0 "U?" H 16950 -739 50  0000 C CNN
+F 1 "RaspberryPi-CM1" H 16950 -830 50  0000 C CNN
+F 2 "" H 16350 6050 50  0001 C CNN
+F 3 "https://www.raspberrypi.org/documentation/hardware/computemodule/datasheets/rpi_DATA_CM_1p0.pdf" H 16350 6050 50  0001 C CNN
+	1    16950 2650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2450 4950 2600 4950
+$Comp
+L power:GND #PWR?
+U 1 1 5D9E515C
+P 4150 5650
+F 0 "#PWR?" H 4150 5400 50  0001 C CNN
+F 1 "GND" H 4155 5477 50  0000 C CNN
+F 2 "" H 4150 5650 50  0001 C CNN
+F 3 "" H 4150 5650 50  0001 C CNN
+	1    4150 5650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4150 5650 4150 5600
+Wire Wire Line
+	3550 5600 4150 5600
+$Comp
+L Sensor_Current:ACS711xEXLT-15AB U?
+U 1 1 5D9EAF0B
+P 2750 3450
+F 0 "U?" V 2796 3893 50  0000 L CNN
+F 1 "NAME LATER" V 2705 3893 50  0000 L CNN
+F 2 "Sensor_Current:Allegro_QFN-12-10-1EP_3x3mm_P0.5mm" H 3100 3400 50  0001 L CIN
+F 3 "http://www.allegromicro.com/~/Media/Files/Datasheets/ACS711-Datasheet.ashx" H 2750 3450 50  0001 C CNN
+	1    2750 3450
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	2200 3850 2200 4150
+Wire Wire Line
+	2850 3850 2850 4600
+Wire Wire Line
+	2850 4600 2700 4600
+Connection ~ 2850 3850
+Wire Wire Line
+	2700 4600 2700 5350
+Wire Wire Line
+	2700 5350 2900 5350
+$Comp
+L Device:Fuse F?
+U 1 1 5DA0E26C
+P 1950 4150
+F 0 "F?" V 1753 4150 50  0000 C CNN
+F 1 "10A" V 1844 4150 50  0000 C CNN
+F 2 "" V 1880 4150 50  0001 C CNN
+F 3 "~" H 1950 4150 50  0001 C CNN
+	1    1950 4150
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2100 4150 2200 4150
+Text Notes 3500 -350 0    50   ~ 0
+third prong???\n
+Text Notes 5700 -650 0    50   ~ 0
+PIC32 schematic symbol. bring that in
+Text GLabel 1500 3800 2    50   Input ~ 0
+NEUTRAL
+Wire Wire Line
+	2850 3850 3600 3850
+$Comp
+L power:NEUT #PWR?
+U 1 1 5DA5B86A
+P 2450 4950
+F 0 "#PWR?" H 2450 4800 50  0001 C CNN
+F 1 "NEUT" H 2467 5123 50  0000 C CNN
+F 2 "" H 2450 4950 50  0001 C CNN
+F 3 "" H 2450 4950 50  0001 C CNN
+	1    2450 4950
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:NEUT #PWR?
+U 1 1 5DA60862
+P 1500 3700
+F 0 "#PWR?" H 1500 3550 50  0001 C CNN
+F 1 "NEUT" H 1517 3873 50  0000 C CNN
+F 2 "" H 1500 3700 50  0001 C CNN
+F 3 "" H 1500 3700 50  0001 C CNN
+	1    1500 3700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x03_Female J?
+U 1 1 5DBE34F5
+P 1150 4150
+F 0 "J?" H 1042 4435 50  0000 C CNN
+F 1 "InputPower" H 1400 4150 50  0000 C CNN
+F 2 "" H 1150 4150 50  0001 C CNN
+F 3 "~" H 1150 4150 50  0001 C CNN
+	1    1150 4150
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	1500 4050 1350 4050
+Wire Wire Line
+	1350 4150 1800 4150
+Wire Wire Line
+	1800 4150 1800 4300
+Connection ~ 1800 4150
+Wire Wire Line
+	1350 4250 1350 4400
+Text GLabel 1450 4400 2    50   Input ~ 0
+GFCI
+Wire Wire Line
+	1350 4400 1450 4400
+$Comp
+L power:GNDPWR #PWR?
+U 1 1 5DA62B98
+P 1350 4650
+F 0 "#PWR?" H 1350 4450 50  0001 C CNN
+F 1 "GNDPWR" H 1354 4496 50  0000 C CNN
+F 2 "" H 1350 4600 50  0001 C CNN
+F 3 "" H 1350 4600 50  0001 C CNN
+	1    1350 4650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1350 4400 1350 4650
+Connection ~ 1350 4400
+Wire Wire Line
+	2000 4300 1800 4300
+$Comp
+L Connector:Conn_01x03_Female J?
+U 1 1 5DBF500E
+P 7800 3950
+F 0 "J?" H 7692 4235 50  0000 C CNN
+F 1 "OutputPower" H 7400 4350 50  0000 C CNN
+F 2 "" H 7800 3950 50  0001 C CNN
+F 3 "~" H 7800 3950 50  0001 C CNN
+	1    7800 3950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7400 3850 7400 3950
+Wire Wire Line
+	7400 3950 7600 3950
+Text GLabel 7400 3750 0    50   Input ~ 0
+NEUTRAL
+Wire Wire Line
+	7600 3750 7600 3850
+Wire Wire Line
+	7400 3750 7600 3750
+Text GLabel 7350 4050 0    50   Input ~ 0
+GFCI
+Wire Wire Line
+	7350 4050 7600 4050
+$Comp
+L Connector:Conn_01x03_Female J?
+U 1 1 5DBFA103
+P 7800 4300
+F 0 "J?" H 7692 4585 50  0000 C CNN
+F 1 "OutputPower" H 7550 4050 50  0000 C CNN
+F 2 "" H 7800 4300 50  0001 C CNN
+F 3 "~" H 7800 4300 50  0001 C CNN
+	1    7800 4300
+	1    0    0    -1  
+$EndComp
+Text GLabel 7400 4200 0    50   Input ~ 0
+NEUTRAL
+Wire Wire Line
+	7400 4200 7600 4200
+Wire Wire Line
+	1500 3700 1500 4050
+Wire Wire Line
+	5950 3850 5950 4000
+Wire Wire Line
+	6700 4300 7600 4300
+Wire Wire Line
+	6700 3850 7400 3850
+Text GLabel 7350 4400 0    50   Input ~ 0
+GFCI
+Wire Wire Line
+	7350 4400 7600 4400
+Wire Wire Line
+	3150 3450 3300 3450
+Wire Wire Line
+	2350 3450 2350 3200
+$Comp
+L power:+5V #PWR?
+U 1 1 5DC04101
+P 2350 3200
+F 0 "#PWR?" H 2350 3050 50  0001 C CNN
+F 1 "+5V" H 2365 3373 50  0000 C CNN
+F 2 "" H 2350 3200 50  0001 C CNN
+F 3 "" H 2350 3200 50  0001 C CNN
+	1    2350 3200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5DC0463E
+P 3300 3500
+F 0 "#PWR?" H 3300 3250 50  0001 C CNN
+F 1 "GND" H 3305 3327 50  0000 C CNN
+F 2 "" H 3300 3500 50  0001 C CNN
+F 3 "" H 3300 3500 50  0001 C CNN
+	1    3300 3500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3300 3500 3300 3450
+Text Label 2750 2600 0    50   ~ 0
+CURRENT_BEFORE_RELAY
+Wire Wire Line
+	2750 2600 2750 3050
+NoConn ~ 3150 3250
+NoConn ~ 3150 3350
+NoConn ~ 3150 3550
+NoConn ~ 3150 3650
+Wire Wire Line
+	2850 3050 2850 2800
+Wire Wire Line
+	2850 2800 2900 2800
+Text Label 2900 2800 0    50   ~ 0
+~FAULT_BEFORE_RELAY
+Wire Wire Line
+	3600 3450 3600 2950
+Wire Wire Line
+	4200 3450 4200 3000
+Wire Wire Line
+	6100 4000 5950 4000
+Wire Wire Line
+	6500 4000 6700 4000
+Wire Wire Line
+	6700 4000 6700 3850
+Wire Wire Line
+	6700 4000 6700 4300
+Connection ~ 6700 4000
+Text Label 4800 5300 2    50   ~ 0
+~ENABLE_PIC
+$Comp
+L 4760_Final-rescue:NMOS-cuauv Q?
+U 1 1 5DC24080
+P 5200 5300
+F 0 "Q?" H 5390 5346 50  0000 L CNN
+F 1 "NMOS" H 5390 5255 50  0000 L CNN
+F 2 "cuauv:SOT-23-3" H 5400 5400 50  0001 C CNN
+F 3 "" H 5500 5350 50  0000 C CNN
+	1    5200 5300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4800 5300 5000 5300
+$Comp
+L power:+5V #PWR?
+U 1 1 5DC27787
+P 5300 4500
+F 0 "#PWR?" H 5300 4350 50  0001 C CNN
+F 1 "+5V" H 5315 4673 50  0000 C CNN
+F 2 "" H 5300 4500 50  0001 C CNN
+F 3 "" H 5300 4500 50  0001 C CNN
+	1    5300 4500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5300 5500 5300 5650
+$Comp
+L power:GND #PWR?
+U 1 1 5DC28C9F
+P 5300 5650
+F 0 "#PWR?" H 5300 5400 50  0001 C CNN
+F 1 "GND" H 5305 5477 50  0000 C CNN
+F 2 "" H 5300 5650 50  0001 C CNN
+F 3 "" H 5300 5650 50  0001 C CNN
+	1    5300 5650
+	1    0    0    -1  
+$EndComp
+Text Label 3600 2950 0    50   ~ 0
+ENABLE_RELAY
+$Comp
+L power:GND #PWR?
+U 1 1 5DC2962E
+P 4300 3000
+F 0 "#PWR?" H 4300 2750 50  0001 C CNN
+F 1 "GND" H 4400 3100 50  0000 R CNN
+F 2 "" H 4300 3000 50  0001 C CNN
+F 3 "" H 4300 3000 50  0001 C CNN
+	1    4300 3000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4300 3000 4200 3000
+Wire Wire Line
+	2550 3850 2200 3850
+Wire Wire Line
+	4200 3850 5950 3850
+$Comp
+L Switch:SW_SPST SW?
+U 1 1 5DC1C446
+P 6300 4000
+F 0 "SW?" H 6300 4235 50  0000 C CNN
+F 1 "SW_SPST" H 6300 4144 50  0000 C CNN
+F 2 "" H 6300 4000 50  0001 C CNN
+F 3 "~" H 6300 4000 50  0001 C CNN
+	1    6300 4000
+	1    0    0    -1  
+$EndComp
+Text GLabel 2600 5300 0    50   Input ~ 0
+NEUTRAL
+$Comp
+L Device:R R?
+U 1 1 5DC1D7B2
+P 5300 4850
+F 0 "R?" H 5370 4896 50  0000 L CNN
+F 1 "1k" V 5300 4800 50  0000 L CNN
+F 2 "" V 5230 4850 50  0001 C CNN
+F 3 "~" H 5300 4850 50  0001 C CNN
+	1    5300 4850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5300 5000 5300 5050
+Text Label 5500 5050 0    50   ~ 0
+ENABLE_RELAY
+Wire Wire Line
+	5300 5050 5500 5050
+Connection ~ 5300 5050
+Wire Wire Line
+	5300 5050 5300 5100
+Wire Wire Line
+	5300 4500 5300 4700
+Text Notes 19450 -650 0    118  ~ 0
+Use actual MCU later\n
+$EndSCHEMATC
