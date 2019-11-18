@@ -14,17 +14,17 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-Text GLabel 2000 4300 2    50   Input ~ 0
+Text GLabel 2050 4450 0    50   Input ~ 0
 HOT_AC
 $Comp
 L Relay:DIPxx-1Axx-12x K?
 U 1 1 5D9D0B46
-P 3900 3650
-F 0 "K?" V 3333 3650 50  0000 C CNN
-F 1 "RENAME LATER" V 3424 3650 50  0000 C CNN
-F 2 "Relay_THT:Relay_StandexMeder_DIP_LowProfile" H 4250 3600 50  0001 L CNN
-F 3 "https://standexelectronics.com/wp-content/uploads/datasheet_reed_relay_DIP.pdf" H 3900 3650 50  0001 C CNN
-	1    3900 3650
+P 4350 3800
+F 0 "K?" V 3783 3800 50  0000 C CNN
+F 1 "RENAME LATER" V 3874 3800 50  0000 C CNN
+F 2 "Relay_THT:Relay_StandexMeder_DIP_LowProfile" H 4700 3750 50  0001 L CNN
+F 3 "https://standexelectronics.com/wp-content/uploads/datasheet_reed_relay_DIP.pdf" H 4350 3800 50  0001 C CNN
+	1    4350 3800
 	0    1    1    0   
 $EndComp
 $Sheet
@@ -87,46 +87,28 @@ Wire Wire Line
 $Comp
 L Sensor_Current:ACS711xEXLT-15AB U?
 U 1 1 5D9EAF0B
-P 2750 3450
-F 0 "U?" V 2796 3893 50  0000 L CNN
-F 1 "NAME LATER" V 2705 3893 50  0000 L CNN
-F 2 "Sensor_Current:Allegro_QFN-12-10-1EP_3x3mm_P0.5mm" H 3100 3400 50  0001 L CIN
-F 3 "http://www.allegromicro.com/~/Media/Files/Datasheets/ACS711-Datasheet.ashx" H 2750 3450 50  0001 C CNN
-	1    2750 3450
+P 3200 3600
+F 0 "U?" V 3246 4043 50  0000 L CNN
+F 1 "NAME LATER" V 3155 4043 50  0000 L CNN
+F 2 "Sensor_Current:Allegro_QFN-12-10-1EP_3x3mm_P0.5mm" H 3550 3550 50  0001 L CIN
+F 3 "http://www.allegromicro.com/~/Media/Files/Datasheets/ACS711-Datasheet.ashx" H 3200 3600 50  0001 C CNN
+	1    3200 3600
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
-	2200 3850 2200 4150
-Wire Wire Line
-	2850 3850 2850 4600
-Wire Wire Line
-	2850 4600 2700 4600
-Connection ~ 2850 3850
-Wire Wire Line
-	2700 4600 2700 5350
+	2650 4000 2650 4300
 Wire Wire Line
 	2700 5350 2900 5350
-$Comp
-L Device:Fuse F?
-U 1 1 5DA0E26C
-P 1950 4150
-F 0 "F?" V 1753 4150 50  0000 C CNN
-F 1 "10A" V 1844 4150 50  0000 C CNN
-F 2 "" V 1880 4150 50  0001 C CNN
-F 3 "~" H 1950 4150 50  0001 C CNN
-	1    1950 4150
-	0    1    1    0   
-$EndComp
 Wire Wire Line
-	2100 4150 2200 4150
+	2550 4300 2650 4300
 Text Notes 3500 -350 0    50   ~ 0
 third prong???\n
 Text Notes 5700 -650 0    50   ~ 0
 PIC32 schematic symbol. bring that in
-Text GLabel 1500 3800 2    50   Input ~ 0
+Text GLabel 1500 3950 2    50   Input ~ 0
 NEUTRAL
 Wire Wire Line
-	2850 3850 3600 3850
+	3300 4000 3600 4000
 $Comp
 L power:NEUT #PWR?
 U 1 1 5DA5B86A
@@ -163,32 +145,13 @@ $EndComp
 Wire Wire Line
 	1500 4050 1350 4050
 Wire Wire Line
-	1350 4150 1800 4150
-Wire Wire Line
-	1800 4150 1800 4300
-Connection ~ 1800 4150
+	2150 4300 2150 4450
 Wire Wire Line
 	1350 4250 1350 4400
 Text GLabel 1450 4400 2    50   Input ~ 0
 GFCI
 Wire Wire Line
 	1350 4400 1450 4400
-$Comp
-L power:GNDPWR #PWR?
-U 1 1 5DA62B98
-P 1350 4650
-F 0 "#PWR?" H 1350 4450 50  0001 C CNN
-F 1 "GNDPWR" H 1354 4496 50  0000 C CNN
-F 2 "" H 1350 4600 50  0001 C CNN
-F 3 "" H 1350 4600 50  0001 C CNN
-	1    1350 4650
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	1350 4400 1350 4650
-Connection ~ 1350 4400
-Wire Wire Line
-	2000 4300 1800 4300
 $Comp
 L Connector:Conn_01x03_Female J?
 U 1 1 5DBF500E
@@ -232,8 +195,6 @@ Wire Wire Line
 Wire Wire Line
 	1500 3700 1500 4050
 Wire Wire Line
-	5950 3850 5950 4000
-Wire Wire Line
 	6700 4300 7600 4300
 Wire Wire Line
 	6700 3850 7400 3850
@@ -242,55 +203,51 @@ GFCI
 Wire Wire Line
 	7350 4400 7600 4400
 Wire Wire Line
-	3150 3450 3300 3450
+	3600 3600 3750 3600
 Wire Wire Line
-	2350 3450 2350 3200
+	2800 3600 2800 3350
 $Comp
 L power:+5V #PWR?
 U 1 1 5DC04101
-P 2350 3200
-F 0 "#PWR?" H 2350 3050 50  0001 C CNN
-F 1 "+5V" H 2365 3373 50  0000 C CNN
-F 2 "" H 2350 3200 50  0001 C CNN
-F 3 "" H 2350 3200 50  0001 C CNN
-	1    2350 3200
+P 2800 3350
+F 0 "#PWR?" H 2800 3200 50  0001 C CNN
+F 1 "+5V" H 2815 3523 50  0000 C CNN
+F 2 "" H 2800 3350 50  0001 C CNN
+F 3 "" H 2800 3350 50  0001 C CNN
+	1    2800 3350
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 5DC0463E
-P 3300 3500
-F 0 "#PWR?" H 3300 3250 50  0001 C CNN
-F 1 "GND" H 3305 3327 50  0000 C CNN
-F 2 "" H 3300 3500 50  0001 C CNN
-F 3 "" H 3300 3500 50  0001 C CNN
-	1    3300 3500
+P 3750 3650
+F 0 "#PWR?" H 3750 3400 50  0001 C CNN
+F 1 "GND" H 3755 3477 50  0000 C CNN
+F 2 "" H 3750 3650 50  0001 C CNN
+F 3 "" H 3750 3650 50  0001 C CNN
+	1    3750 3650
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	3300 3500 3300 3450
-Text Label 2750 2600 0    50   ~ 0
+	3750 3650 3750 3600
+Text Label 3200 2750 0    50   ~ 0
 CURRENT_BEFORE_RELAY
 Wire Wire Line
-	2750 2600 2750 3050
-NoConn ~ 3150 3250
-NoConn ~ 3150 3350
-NoConn ~ 3150 3550
-NoConn ~ 3150 3650
+	3200 2750 3200 3200
+NoConn ~ 3600 3400
+NoConn ~ 3600 3500
+NoConn ~ 3600 3700
+NoConn ~ 3600 3800
 Wire Wire Line
-	2850 3050 2850 2800
+	3300 3200 3300 2950
 Wire Wire Line
-	2850 2800 2900 2800
-Text Label 2900 2800 0    50   ~ 0
+	3300 2950 3350 2950
+Text Label 3350 2950 0    50   ~ 0
 ~FAULT_BEFORE_RELAY
 Wire Wire Line
-	3600 3450 3600 2950
+	4050 3600 4050 3100
 Wire Wire Line
-	4200 3450 4200 3000
-Wire Wire Line
-	6100 4000 5950 4000
-Wire Wire Line
-	6500 4000 6700 4000
+	4650 3600 4650 3150
 Wire Wire Line
 	6700 4000 6700 3850
 Wire Wire Line
@@ -335,34 +292,32 @@ F 3 "" H 5300 5650 50  0001 C CNN
 	1    5300 5650
 	1    0    0    -1  
 $EndComp
-Text Label 3600 2950 0    50   ~ 0
+Text Label 4050 3100 0    50   ~ 0
 ENABLE_RELAY
 $Comp
 L power:GND #PWR?
 U 1 1 5DC2962E
-P 4300 3000
-F 0 "#PWR?" H 4300 2750 50  0001 C CNN
-F 1 "GND" H 4400 3100 50  0000 R CNN
-F 2 "" H 4300 3000 50  0001 C CNN
-F 3 "" H 4300 3000 50  0001 C CNN
-	1    4300 3000
+P 4750 3150
+F 0 "#PWR?" H 4750 2900 50  0001 C CNN
+F 1 "GND" H 4850 3250 50  0000 R CNN
+F 2 "" H 4750 3150 50  0001 C CNN
+F 3 "" H 4750 3150 50  0001 C CNN
+	1    4750 3150
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	4300 3000 4200 3000
+	4750 3150 4650 3150
 Wire Wire Line
-	2550 3850 2200 3850
-Wire Wire Line
-	4200 3850 5950 3850
+	3000 4000 2650 4000
 $Comp
 L Switch:SW_SPST SW?
 U 1 1 5DC1C446
-P 6300 4000
-F 0 "SW?" H 6300 4235 50  0000 C CNN
-F 1 "SW_SPST" H 6300 4144 50  0000 C CNN
-F 2 "" H 6300 4000 50  0001 C CNN
-F 3 "~" H 6300 4000 50  0001 C CNN
-	1    6300 4000
+P 2350 4300
+F 0 "SW?" H 2350 4535 50  0000 C CNN
+F 1 "SW_SPST" H 2350 4444 50  0000 C CNN
+F 2 "" H 2350 4300 50  0001 C CNN
+F 3 "~" H 2350 4300 50  0001 C CNN
+	1    2350 4300
 	1    0    0    -1  
 $EndComp
 Text GLabel 2600 5300 0    50   Input ~ 0
@@ -389,28 +344,26 @@ Wire Wire Line
 	5300 5050 5300 5100
 Wire Wire Line
 	5300 4500 5300 4700
-$Comp
-L MCU_Microchip_PIC32:PIC32MX120F032D-IPT U?
-U 1 1 5DC2EB4D
-P 19800 1300
-F 0 "U?" H 19800 -189 50  0000 C CNN
-F 1 "PIC32MX120F032D-IPT" H 19800 -280 50  0000 C CNN
-F 2 "Package_QFP:TQFP-44_10x10mm_P0.8mm" H 19950 2750 50  0001 L CNN
-F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/60001168F.pdf" H 19800 1100 50  0001 C CNN
-	1    19800 1300
-	1    0    0    -1  
-$EndComp
 Text Notes 19450 -650 0    118  ~ 0
 Use actual MCU later\n
-$Comp
-L power:+5V #PWR?
-U 1 1 5DC363A2
-P 19700 -300
-F 0 "#PWR?" H 19700 -450 50  0001 C CNN
-F 1 "+5V" H 19715 -127 50  0000 C CNN
-F 2 "" H 19700 -300 50  0001 C CNN
-F 3 "" H 19700 -300 50  0001 C CNN
-	1    19700 -300
-	1    0    0    -1  
-$EndComp
+Wire Wire Line
+	2050 4450 2150 4450
+Connection ~ 2150 4300
+Wire Wire Line
+	2000 4150 2000 4300
+Wire Wire Line
+	1350 4150 2000 4150
+Wire Wire Line
+	2000 4300 2150 4300
+Wire Wire Line
+	2700 5350 2700 4500
+Wire Wire Line
+	2700 4500 3600 4500
+Wire Wire Line
+	3600 4500 3600 4000
+Connection ~ 3600 4000
+Wire Wire Line
+	3600 4000 4050 4000
+Wire Wire Line
+	4650 4000 6700 4000
 $EndSCHEMATC

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="utf-8">
+
+  <!-- Load d3.js -->
+  <script src="https://d3js.org/d3.v4.js"></script>
+  <script src="demo_graph.js"></script>
+</head>
+
+<body>
+  <div id="graph_stuff"> </div>
+
+  <script>
+    plotSomething();
+    const ONE_SECOND = 1000; //millisecond to seconds
+    setInterval(redrawPlot(), 3 * ONE_SECOND);
+  </script>
+  <!-- Create a div where the graph will take place -->
+
+
+  <!-- quick button test -->
+  <!-- <button type="button" onclick="plotSomething()">Press Me</button> -->
+</body>
