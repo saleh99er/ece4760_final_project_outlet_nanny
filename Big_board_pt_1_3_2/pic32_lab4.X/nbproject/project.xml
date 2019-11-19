@@ -3,7 +3,7 @@
     <type>com.microchip.mplab.nbide.embedded.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>Protothreads_1_3_2</name>
+            <name>pic32_lab4</name>
             <creation-uuid>f23607bb-6719-435a-b73c-5d3c9bbf7728</creation-uuid>
             <make-project-type>0</make-project-type>
             <c-extensions>c</c-extensions>

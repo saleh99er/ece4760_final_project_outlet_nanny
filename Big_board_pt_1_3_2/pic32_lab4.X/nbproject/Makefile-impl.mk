@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=Protothreads_1_3_2.X
+PROJECTNAME=pic32_lab4.X
 
 # Active Configuration
 DEFAULTCONF=default
