@@ -1,7 +1,7 @@
 function plotSomething() {
   // set the dimensions and margins of the graph
   var margin = { top: 10, right: 30, bottom: 30, left: 60 },
-    width = 460 - margin.left - margin.right,
+    width = 1000 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
   // append the svg object to the body of the page
@@ -14,11 +14,11 @@ function plotSomething() {
       "translate(" + margin.left + "," + margin.top + ")");
 
   //Read the data
-  d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv",
+  d3.csv("test.csv",
 
     // When reading the csv, I must format variables:
     function (d) {
-      return { date: d3.timeParse("%Y-%m-%d")(d.date), value: d.value }
+      return { date: d3.timeParse("%Y-%m-%dT%H:%M:%S:%L")(d.date), value: d.value }
     },
 
     // Now I can use this dataset:
