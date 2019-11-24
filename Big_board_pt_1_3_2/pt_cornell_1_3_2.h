@@ -805,7 +805,7 @@ int PT_GetSerialBuffer(struct pt *pt)
        // while(!UARTReceivedDataIsAvailable(UART2)){};
         character = UARTGetDataByte(UART2);
         PT_YIELD_UNTIL(pt, UARTTransmitterIsReady(UART2));
-        UARTSendDataByte(UART2, character);
+        //UARTSendDataByte(UART2, character);
 
         // unomment to check backspace character!!!
         //printf("--%x--",character );
@@ -1027,7 +1027,7 @@ void PT_setup (void)
   // reverse video control codes
   normal_text;
   rev_text ;
-  printf("...protothreads 1_3_2 07/18/18...");
+  //printf("...protothreads 1_3_2 07/18/18...");
   normal_text ;
   
   // === set up DMA for UART output ==================

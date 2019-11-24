@@ -38,7 +38,7 @@
 // Go to pt_cornell_1_3_1.h and search for "SET UART i/o PINS"
 #define use_uart_serial
 // BAUDRATE must match PC terminal emulator setting
-#define BAUDRATE 38400 
+#define BAUDRATE 9600 
 //==============================================================
 
 #endif	/* CONFIG_H */

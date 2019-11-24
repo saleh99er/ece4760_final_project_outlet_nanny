@@ -25,7 +25,7 @@
 // === thread structures ============================================
 // thread control structs
 // note that UART input and output are threads
-static struct pt pt_timer ;
+static struct pt pt_timer, pt_cmd, pt_input, pt_output, pt_DMA_output;
 
 // system 1 second interval tick
 int sys_time_seconds ;
@@ -35,22 +35,74 @@ int sys_time_seconds ;
 static PT_THREAD (protothread_timer(struct pt *pt))
 {
     PT_BEGIN(pt);
-      while(1) {
-        // yield time 1 second
-        PT_YIELD_TIME_msec(1000) ;
-        sys_time_seconds++ ;
-        
-        // NEVER exit while
-      } // END WHILE(1)
+    
+    
+    while(1) {
+        if(sys_time_seconds % 10 == 0){
+            mPORTBToggleBits(BIT_0);
+        }
+      // yield time 1 second
+      PT_YIELD_TIME_msec(1000) ;
+      sys_time_seconds++ ;
+
+      // NEVER exit while
+    } // END WHILE(1)
   PT_END(pt);
 } // timer thread
+
+static PT_THREAD (protothread_cmd(struct pt *pt))
+{
+    PT_BEGIN(pt);
+    static int toggle;
+    static char cmd[16]; 
+    static int value_i;
+      while(1) {
+          PT_YIELD_TIME_msec(100);
+            //debug
+            //sprintf(PT_send_buffer, "t%d", toggle);
+            //toggle = !toggle;
+          
+            //sprintf(PT_send_buffer,"r%d", toggle);
+            // by spawning a print thread
+            PT_SPAWN(pt, &pt_input, PT_GetSerialBuffer(&pt_input) );             
+            
+            sscanf(PT_term_buffer, "%s%d", cmd, &value_i);
+            if (cmd[0]=='r'){
+                if (value_i == 0){
+                    mPORTBSetBits(BIT_2);
+                }
+                else{
+                    mPORTBClearBits(BIT_2);
+                }
+                sprintf(PT_send_buffer,"r%d", value_i);
+                PT_SPAWN(pt, &pt_DMA_output, PT_DMA_PutSerialBuffer(&pt_DMA_output) );
+                sprintf(PT_send_buffer,"done");
+                PT_SPAWN(pt, &pt_DMA_output, PT_DMA_PutSerialBuffer(&pt_DMA_output) );
+            }            
+            
+ 
+          //spawn a thread to handle terminal input
+            // the input thread waits for input
+            // -- BUT does NOT block other threads
+            // string is returned in "PT_term_buffer"
+            sprintf(PT_term_buffer, "");
+            PT_SPAWN(pt, &pt_input, PT_GetSerialBuffer(&pt_input) );
+            
+            // never exit while
+      } // END WHILE(1)
+  PT_END(pt);
+} // end of cmd thread
 
 // === Main  ======================================================
 void main(void) {
  //SYSTEMConfigPerformance(PBCLK);
   
   ANSELA = 0; ANSELB = 0; 
-
+  
+  //GPIO setup
+  mPORTASetPinsDigitalOut(BIT_0);
+  mPORTBSetPinsDigitalOut(BIT_2 | BIT_1 | BIT_0);
+  
   // === config threads ==========
   // turns OFF UART support and debugger pin, unless defines are set
   PT_setup();
@@ -60,13 +112,14 @@ void main(void) {
 
   // init the threads
   PT_INIT(&pt_timer);
-
+  PT_INIT(&pt_cmd);
   // seed random color
   srand(1);
 
   // round-robin scheduler for threads
   while (1){
       PT_SCHEDULE(protothread_timer(&pt_timer));
+      PT_SCHEDULE(protothread_cmd(&pt_cmd));
       }
   } // main
 
