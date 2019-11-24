@@ -40,6 +40,7 @@ while True:
 	requestRelay(toggle)
 	print("done " + str(toggle))
 	toggle = not toggle
+	time.sleep(20)
 
 
 
