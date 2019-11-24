@@ -804,7 +804,9 @@ int PT_GetSerialBuffer(struct pt *pt)
         PT_YIELD_UNTIL(pt, UARTReceivedDataIsAvailable(UART2));
        // while(!UARTReceivedDataIsAvailable(UART2)){};
         character = UARTGetDataByte(UART2);
-        PT_YIELD_UNTIL(pt, UARTTransmitterIsReady(UART2));
+        
+        //UNCOMMENT BELOW BLOCK TO TRANSMIT EVERY BYTE RECEIVED (commented by Saleh)
+        //PT_YIELD_UNTIL(pt, UARTTransmitterIsReady(UART2));
         //UARTSendDataByte(UART2, character);
 
         // unomment to check backspace character!!!

@@ -66,7 +66,7 @@ static PT_THREAD (protothread_cmd(struct pt *pt))
             // by spawning a print thread
             PT_SPAWN(pt, &pt_input, PT_GetSerialBuffer(&pt_input) );             
             
-            sscanf(PT_term_buffer, "b\'%s\'%d", cmd, &value_i);
+            sscanf(PT_term_buffer, "%s %d", cmd, &value_i);
             if (cmd[0]=='r'){
                 if (value_i == 0){
                     mPORTBSetBits(BIT_2);
@@ -75,6 +75,7 @@ static PT_THREAD (protothread_cmd(struct pt *pt))
                     mPORTBClearBits(BIT_2);
                 }
                 sprintf(PT_send_buffer,"r%d", value_i);
+                //sprintf(PT_send_buffer, "%s", PT_term_buffer); //send what was received
                 PT_SPAWN(pt, &pt_DMA_output, PT_DMA_PutSerialBuffer(&pt_DMA_output) );
                 sprintf(PT_send_buffer,"done");
                 PT_SPAWN(pt, &pt_DMA_output, PT_DMA_PutSerialBuffer(&pt_DMA_output) );
