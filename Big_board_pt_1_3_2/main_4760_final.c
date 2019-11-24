@@ -66,7 +66,7 @@ static PT_THREAD (protothread_cmd(struct pt *pt))
             // by spawning a print thread
             PT_SPAWN(pt, &pt_input, PT_GetSerialBuffer(&pt_input) );             
             
-            sscanf(PT_term_buffer, "%s%d", cmd, &value_i);
+            sscanf(PT_term_buffer, "b\'%s\'%d", cmd, &value_i);
             if (cmd[0]=='r'){
                 if (value_i == 0){
                     mPORTBSetBits(BIT_2);

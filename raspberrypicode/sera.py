@@ -1,7 +1,7 @@
 from serial import Serial
 import csv
 
-ser = Serial('COM11', baudrate = 9600, timeout = 0) # OPEN SERIAL PORT
+ser = Serial('COM12', baudrate = 9600, timeout = 0) # OPEN SERIAL PORT
 print(ser.name) # PRINT PORT THAT WAS USED
 
 
@@ -16,9 +16,9 @@ while True:
 	elif (myString == "b'0"):
 		ser.write(b'1')
 
-	print(myString)
 	with open('D:\Samad\Desktop\sera.csv','a') as fd:
 		if (myString != "b''"):
+			print(myString)
 			fd.write(myString+"\n")
 			fd.close()
 		
