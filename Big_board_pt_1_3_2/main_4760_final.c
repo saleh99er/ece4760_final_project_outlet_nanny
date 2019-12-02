@@ -45,12 +45,12 @@ typedef signed int fix16 ;
 // system 1 second interval tick
 int sys_time_seconds ;
 
-volatile int adc_raw;
+volatile unsigned int adc_raw;
 volatile int point_num;
 volatile int sum_squares = 0;
 volatile int overflowCounter = 0;
 volatile fix16 adc_mean;
-#define ZERO_CURRENT_ADC_READING 512
+#define ZERO_CURRENT_ADC_READING 775 //done experimentally with 2.5V voltage source
 
 // === Timer Interrupt ==========================================
 // == Timer 2 ISR =====================================================
@@ -80,8 +80,6 @@ void __ISR(_TIMER_2_VECTOR, ipl2) Timer2Handler(void){
 static PT_THREAD (protothread_timer(struct pt *pt))
 {
     PT_BEGIN(pt);
-    
-    
     while(1) {
         if(sys_time_seconds % 10 == 0){
             //mPORTBToggleBits(BIT_0);
@@ -98,21 +96,13 @@ static PT_THREAD (protothread_timer(struct pt *pt))
 static PT_THREAD (protothread_cmd(struct pt *pt))
 {
     PT_BEGIN(pt);
-    static int toggle;
     static char cmd[16]; 
     static int value_i;
-    sprintf(PT_term_buffer, "PM PIC32 on");
-    PT_SPAWN(pt, &pt_input, PT_GetSerialBuffer(&pt_input) );
+    sprintf(PT_send_buffer, "PM PIC32 on");
+    PT_SPAWN(pt, &pt_DMA_output, PT_DMA_PutSerialBuffer(&pt_DMA_output) );
       while(1) {
           PT_YIELD_TIME_msec(100);
-            //debug
-            //sprintf(PT_send_buffer, "t%d", toggle);
-            //toggle = !toggle;
-          
-            //sprintf(PT_send_buffer,"r%d", toggle);
-            // by spawning a print thread
             PT_SPAWN(pt, &pt_input, PT_GetSerialBuffer(&pt_input) );             
-            
             sscanf(PT_term_buffer, "%s %d", cmd, &value_i);
             //turn relay on/off
             if (cmd[0]=='r'){
