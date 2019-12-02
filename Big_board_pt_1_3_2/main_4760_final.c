@@ -40,13 +40,17 @@ typedef signed int fix16 ;
 #define sqrtfix16(a) (float2fix16(sqrt(fix2float16(a)))) 
 #define absfix16(a) abs(a)
 
+//fix16 prev_adc_means[10];
+
 // system 1 second interval tick
 int sys_time_seconds ;
 
 volatile int adc_raw;
 volatile int point_num;
 volatile int sum_squares = 0;
+volatile int overflowCounter = 0;
 volatile fix16 adc_mean;
+#define ZERO_CURRENT_ADC_READING 512
 
 // === Timer Interrupt ==========================================
 // == Timer 2 ISR =====================================================
@@ -54,14 +58,20 @@ void __ISR(_TIMER_2_VECTOR, ipl2) Timer2Handler(void){
     // clear the timer interrupt flag
     mT2ClearIntFlag();
     
+    //compute rms of adc reading
+    AcquireADC10();
     adc_raw = ReadADC10(0);
+    adc_raw -= ZERO_CURRENT_ADC_READING;
     sum_squares += (adc_raw)*(adc_raw);
+    if(sum_squares < 0) overflowCounter++;
     point_num += 1;
     
     if (point_num == 20){
         mPORTBToggleBits(BIT_0);
+        // rms^2 stored in adc mean
+        adc_mean = float2fix16((1.0*sum_squares) / 20);
+        sum_squares = 0;
         point_num = 0;
-        adc_mean = int2fix16(sum_squares) / 20;
     }
 }
 
@@ -91,6 +101,8 @@ static PT_THREAD (protothread_cmd(struct pt *pt))
     static int toggle;
     static char cmd[16]; 
     static int value_i;
+    sprintf(PT_term_buffer, "PM PIC32 on");
+    PT_SPAWN(pt, &pt_input, PT_GetSerialBuffer(&pt_input) );
       while(1) {
           PT_YIELD_TIME_msec(100);
             //debug
@@ -102,6 +114,7 @@ static PT_THREAD (protothread_cmd(struct pt *pt))
             PT_SPAWN(pt, &pt_input, PT_GetSerialBuffer(&pt_input) );             
             
             sscanf(PT_term_buffer, "%s %d", cmd, &value_i);
+            //turn relay on/off
             if (cmd[0]=='r'){
                 if (value_i == 0){
                     mPORTAClearBits(BIT_0);
@@ -114,17 +127,27 @@ static PT_THREAD (protothread_cmd(struct pt *pt))
                 sprintf(PT_send_buffer,"r%d done", value_i);
                 //sprintf(PT_send_buffer, "%s", PT_term_buffer); //send what was received
                 PT_SPAWN(pt, &pt_DMA_output, PT_DMA_PutSerialBuffer(&pt_DMA_output) );
-            }            
-            
- 
-          //spawn a thread to handle terminal input
-            // the input thread waits for input
-            // -- BUT does NOT block other threads
-            // string is returned in "PT_term_buffer"
-            sprintf(PT_term_buffer, "");
-            PT_SPAWN(pt, &pt_input, PT_GetSerialBuffer(&pt_input) );
-            
-            // never exit while
+            }
+            //report rms current
+            else if (cmd[0]=='i'){
+                
+            }
+            else if (cmd[0]=='o'){
+                sprintf(PT_send_buffer, "OC:%d", overflowCounter);
+                PT_SPAWN(pt, &pt_DMA_output, PT_DMA_PutSerialBuffer(&pt_DMA_output) );
+            }
+            //report raw adc reading after rms calculation
+            else if (cmd[0]=='a'){
+                //adc_raw
+                //sprintf(PT_send_buffer, "%d", adc_raw);
+                sprintf(PT_send_buffer, "%f", fix2float16(adc_mean));
+                PT_SPAWN(pt, &pt_DMA_output, PT_DMA_PutSerialBuffer(&pt_DMA_output) );
+            }
+            //unknown cmd
+            else{
+                sprintf(PT_send_buffer, "%s", "unknown cmd");
+                PT_SPAWN(pt, &pt_DMA_output, PT_DMA_PutSerialBuffer(&pt_DMA_output) );
+            }
       } // END WHILE(1)
   PT_END(pt);
 } // end of cmd thread
