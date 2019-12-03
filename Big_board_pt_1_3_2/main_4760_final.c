@@ -257,10 +257,11 @@ void main(void) {
   // Set up timer3 on,  no interrupts, internal clock, prescalar 1, compare-value
   // This timer generates the time base for each ADC sample. 
     // works at ??? Hz
-    #define sample_rate 500000
+    #define sample_rate 1000
+    #define prescalar 64
     // 40 MHz PB clock rate
-    #define timer_match 40000000/sample_rate
-    OpenTimer3(T3_ON | T3_SOURCE_INT | T3_PS_1_1, timer_match); 
+    #define timer_match 40000000/(64*sample_rate)
+    OpenTimer3(T3_ON | T3_SOURCE_INT | T3_PS_1_64, timer_match); 
     
     //=== DMA Channel 0 transfer ADC data to array v_in ================================
     // Open DMA Chan1 for later use sending video to TV
