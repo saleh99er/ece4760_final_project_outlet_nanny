@@ -55,6 +55,14 @@ fix14 Sinewave[N_WAVE]; // a table of sines for the FFT
 fix14 window[N_WAVE]; // a table of window values for the FFT
 fix14 fr[N_WAVE], fi[N_WAVE];
 
+#define SIXTY_HZ 30
+#define AMP_TO_RMS 0.707
+#define CUR_SENSOR_VOUT_TO_AMP 10
+//#define CUR_SENSOR_RMS (AMP_TO_RMS*CUR_SENSOR_VOUT_TO_AMP)
+#define CUR_SENSOR_RMS 7.07
+fix14 current;
+fix14 currentLimit;
+
 // system 1 second interval tick
 int sys_time_seconds ;
 
@@ -74,7 +82,7 @@ static PT_THREAD (protothread_timer(struct pt *pt))
       // yield time 1 second
       PT_YIELD_TIME_msec(1000) ;
       sys_time_seconds++ ;
-
+      
       // NEVER exit while
     } // END WHILE(1)
   PT_END(pt);
@@ -85,12 +93,14 @@ static PT_THREAD (protothread_cmd(struct pt *pt))
     PT_BEGIN(pt);
     static char cmd[16]; 
     static int value_i;
+    static float value_f;
     sprintf(PT_send_buffer, "PM PIC32 on");
     PT_SPAWN(pt, &pt_DMA_output, PT_DMA_PutSerialBuffer(&pt_DMA_output) );
       while(1) {
           PT_YIELD_TIME_msec(100);
             PT_SPAWN(pt, &pt_input, PT_GetSerialBuffer(&pt_input) );             
             sscanf(PT_term_buffer, "%s %d", cmd, &value_i);
+            sscanf(PT_term_buffer, "%s %f", cmd, &value_f);
             //turn relay on/off
             if (cmd[0]=='r'){
                 if (value_i == 0){
@@ -106,8 +116,24 @@ static PT_THREAD (protothread_cmd(struct pt *pt))
                 PT_SPAWN(pt, &pt_DMA_output, PT_DMA_PutSerialBuffer(&pt_DMA_output) );
             }
             //report rms current
-            else if (cmd[0]=='i'){
-               //TO BE DONE 
+            else if (cmd[0]=='i'){ 
+                sprintf(PT_send_buffer, "%f", fix2float14(current));
+                PT_SPAWN(pt, &pt_DMA_output, PT_DMA_PutSerialBuffer(&pt_DMA_output) );
+            }
+            //report rms voltage
+            else if (cmd[0]=='p'){
+                sprintf(PT_send_buffer, "%f", 120*fix2float14(current));
+                PT_SPAWN(pt, &pt_DMA_output, PT_DMA_PutSerialBuffer(&pt_DMA_output) );
+            }
+            //limit current to be no greater than this, otherwise shut off relay
+            else if (cmd[0]=='l'){
+                sprintf(PT_send_buffer, "limit %fA", value_f);
+                PT_SPAWN(pt, &pt_DMA_output, PT_DMA_PutSerialBuffer(&pt_DMA_output) );
+            }
+            //get status of device
+            else if (cmd[0]=='s'){
+                sprintf(PT_send_buffer, "STATUS");
+                PT_SPAWN(pt, &pt_DMA_output, PT_DMA_PutSerialBuffer(&pt_DMA_output) );
             }
             else if (cmd[0]=='f'){
                 if(value_i >= 0 && value_i < N_WAVE/2){
@@ -204,6 +230,7 @@ static PT_THREAD (protothread_fft(struct pt *pt))
     static fix14 zero_point_4 = float2fix14(0.4) ;
     // approx log calc ;
     static int sx, y, ly, temp ;
+    static fix16 current_wout_fudge;
     
     while(1) {
         // yield time 0.7 second
@@ -240,7 +267,12 @@ static PT_THREAD (protothread_fft(struct pt *pt))
             fr[sample_number] = max(fr[sample_number], fi[sample_number]) + 
                     multfix14(min(fr[sample_number], fi[sample_number]), zero_point_4); 
         }
-        
+        //         0.707 * 10 * current sensor output amplitude
+        //OLD 
+        //current_wout_fudge = CUR_SENSOR_RMS * (fr[SIXTY_HZ] << 6);
+        //current = 1.16*current_wout_fudge - 0.043;
+        current = 1367*fr[SIXTY_HZ] - 0.318;
+        if(current < 0) current = 0;
         // NEVER exit while
       } // END WHILE(1)
   PT_END(pt);
