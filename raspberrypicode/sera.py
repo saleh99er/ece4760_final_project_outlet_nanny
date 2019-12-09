@@ -2,11 +2,15 @@ from serial import Serial
 import csv
 import time
 
-salehsPath='C:\\Users\\Dell\\Documents\\Classes\\ECE4760\\ece4760-final-project\\raspberrypicode\\sera.csv'
+salehsPathWindows='C:\\Users\\Dell\\Documents\\Classes\\ECE4760\\ece4760-final-project\\raspberrypicode\\sera.csv'
+salehsPathUbuntu="/home/saleh99er/Documents/schoolStuff/ECE4760/4760_Final/sera.csv"
+
 samadsPath='D:\Samad\Desktop\sera.csv'
 port = 'COM12'
+ubuntuPort = "/dev/ttyUSB0"
 
-ser = Serial(port, baudrate = 9600, timeout = 0) # OPEN SERIAL PORT
+
+ser = Serial(ubuntuPort, baudrate = 9600, timeout = 0) # OPEN SERIAL PORT
 print(ser.name) # PRINT PORT THAT WAS USED
 last_rcv_string = "b''"
 rcv = 0
@@ -27,7 +31,7 @@ def requestRelay(turnOn):
 		else:
 			ser.write(b'r 0')
 		ser.write(b'\r')
-		rcv = ser.read(12)
+		rcv = ser.read(16)
 		rcv_string = str(rcv)
 		#print(rcv_string) #for debugging
 
@@ -35,14 +39,22 @@ def requestRelay(turnOn):
 		#print(confirm) #for debugging
 		time.sleep(0.5)
 
+# TEST / Debugging functions
 
-while True:
-	requestRelay(toggle)
-	print("done " + str(toggle))
-	toggle = not toggle
-	time.sleep(20)
+def test_periodicRelayControl():
+	while True:
+		requestRelay(toggle)
+		print("done " + str(toggle))
+		toggle = not toggle
+		time.sleep(20)
 
-
+def test_serialCommsToRaspPi():
+	while True:
+		ser.write("Hello World")
+		rcv = ser.read(12)
+		rcv_string = str(rcv)
+		print(rcv_string)
+		time.sleep(0.5)
 
 # while True:
 
