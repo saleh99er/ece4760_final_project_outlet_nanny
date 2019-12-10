@@ -22,6 +22,24 @@ RELAY_ON_CONFIRM_MSG = "b'" + NEW_LINE + 'r1 done' + END_MSG + "'"
 
 toggle = True
 
+def setCurrentLimit(lim):
+	assert type(lim) == float or type(lim) == int
+	if(type(lim) == int):
+		lim = float(lim)
+	confirm = False
+	while(not confirm):
+		ser.write(b'l %f' % lim)
+		ser.write(b'\r')
+		rcv = ser.read(16)
+		rcv_string = str(rcv)
+		confirm = False
+		if(rcv_string == b''):
+			print(rcv_string)
+	
+	
+
+
+
 def requestRelay(turnOn):
 	assert type(turnOn) == bool
 	confirm  = False
@@ -41,7 +59,18 @@ def requestRelay(turnOn):
 
 # TEST / Debugging functions
 
+def debug_terminal():
+	while True:
+		rcv = ser.read(16)
+		rcv_string = str(rcv)
+		print(rcv_string)
+		time.sleep(0.5)
+		user_input = input(">>")
+		ser.write(b'%s' % user_input.encode('utf8'))
+
 def test_periodicRelayControl():
+
+	toggle = False
 	while True:
 		requestRelay(toggle)
 		print("done " + str(toggle))
@@ -55,6 +84,10 @@ def test_serialCommsToRaspPi():
 		rcv_string = str(rcv)
 		print(rcv_string)
 		time.sleep(0.5)
+
+#setCurrentLimit(5.0)
+#test_periodicRelayControl()
+debug_terminal()
 
 # while True:
 
