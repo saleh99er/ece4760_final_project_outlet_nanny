@@ -2,11 +2,15 @@ from serial import Serial
 import csv
 import time
 
-salehsPath='C:\\Users\\Dell\\Documents\\Classes\\ECE4760\\ece4760-final-project\\raspberrypicode\\sera.csv'
+salehsPathWindows='C:\\Users\\Dell\\Documents\\Classes\\ECE4760\\ece4760-final-project\\raspberrypicode\\sera.csv'
+salehsPathUbuntu="/home/saleh99er/Documents/schoolStuff/ECE4760/4760_Final/sera.csv"
+
 samadsPath='D:\Samad\Desktop\sera.csv'
 port = 'COM12'
+ubuntuPort = "/dev/ttyUSB0"
 
-ser = Serial(port, baudrate = 9600, timeout = 0) # OPEN SERIAL PORT
+
+ser = Serial(ubuntuPort, baudrate = 9600, timeout = 0) # OPEN SERIAL PORT
 print(ser.name) # PRINT PORT THAT WAS USED
 last_rcv_string = "b''"
 rcv = 0
@@ -18,6 +22,24 @@ RELAY_ON_CONFIRM_MSG = "b'" + NEW_LINE + 'r1 done' + END_MSG + "'"
 
 toggle = True
 
+def setCurrentLimit(lim):
+	assert type(lim) == float or type(lim) == int
+	if(type(lim) == int):
+		lim = float(lim)
+	confirm = False
+	while(not confirm):
+		ser.write(b'l %f' % lim)
+		ser.write(b'\r')
+		rcv = ser.read(16)
+		rcv_string = str(rcv)
+		confirm = False
+		if(rcv_string == b''):
+			print(rcv_string)
+	
+	
+
+
+
 def requestRelay(turnOn):
 	assert type(turnOn) == bool
 	confirm  = False
@@ -27,7 +49,7 @@ def requestRelay(turnOn):
 		else:
 			ser.write(b'r 0')
 		ser.write(b'\r')
-		rcv = ser.read(12)
+		rcv = ser.read(16)
 		rcv_string = str(rcv)
 		#print(rcv_string) #for debugging
 
@@ -35,14 +57,37 @@ def requestRelay(turnOn):
 		#print(confirm) #for debugging
 		time.sleep(0.5)
 
+# TEST / Debugging functions
 
-while True:
-	requestRelay(toggle)
-	print("done " + str(toggle))
-	toggle = not toggle
-	time.sleep(20)
+def debug_terminal():
+	while True:
+		rcv = ser.read(16)
+		rcv_string = str(rcv)
+		print(rcv_string)
+		time.sleep(0.5)
+		user_input = input(">>")
+		ser.write(b'%s' % user_input.encode('utf8'))
 
+def test_periodicRelayControl():
 
+	toggle = False
+	while True:
+		requestRelay(toggle)
+		print("done " + str(toggle))
+		toggle = not toggle
+		time.sleep(20)
+
+def test_serialCommsToRaspPi():
+	while True:
+		ser.write("Hello World")
+		rcv = ser.read(12)
+		rcv_string = str(rcv)
+		print(rcv_string)
+		time.sleep(0.5)
+
+#setCurrentLimit(5.0)
+#test_periodicRelayControl()
+debug_terminal()
 
 # while True:
 
