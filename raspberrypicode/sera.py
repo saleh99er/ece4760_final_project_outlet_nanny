@@ -10,7 +10,7 @@ port = 'COM12'
 ubuntuPort = "/dev/ttyUSB0"
 
 
-ser = Serial(ubuntuPort, baudrate = 9600, timeout = 0) # OPEN SERIAL PORT
+ser = Serial(port, baudrate = 9600, timeout = 0) # OPEN SERIAL PORT
 print(ser.name) # PRINT PORT THAT WAS USED
 last_rcv_string = "b''"
 rcv = 0
@@ -44,6 +44,7 @@ def requestRelay(turnOn):
 	assert type(turnOn) == bool
 	confirm  = False
 	while(not confirm):
+		print("not confirmed")
 		if(turnOn):
 			ser.write(b'r 1')
 		else:
@@ -61,15 +62,17 @@ def requestRelay(turnOn):
 
 def debug_terminal():
 	while True:
+		time.sleep(0.5)
+		user_input = input(">>")
+		print(user_input)
+		user_input_bstr = b'%s' % user_input.encode('utf8')
+		print(user_input_bstr)
+		ser.write(user_input_bstr)
 		rcv = ser.read(16)
 		rcv_string = str(rcv)
 		print(rcv_string)
-		time.sleep(0.5)
-		user_input = input(">>")
-		ser.write(b'%s' % user_input.encode('utf8'))
 
 def test_periodicRelayControl():
-
 	toggle = False
 	while True:
 		requestRelay(toggle)
@@ -86,8 +89,8 @@ def test_serialCommsToRaspPi():
 		time.sleep(0.5)
 
 #setCurrentLimit(5.0)
-#test_periodicRelayControl()
-debug_terminal()
+test_periodicRelayControl()
+#debug_terminal()
 
 # while True:
 

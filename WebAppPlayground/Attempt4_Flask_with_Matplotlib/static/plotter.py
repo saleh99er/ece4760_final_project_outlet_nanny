@@ -37,4 +37,5 @@ plt.ylabel('Current')
 plt.title('Avg RMS Current consumed over time')
 plt.gcf().autofmt_xdate() #beautify x-labels
 plt.legend()
-plt.show()
+#plt.show()
+plt.savefig("avg_irms_over_time", edgecolor='b')
