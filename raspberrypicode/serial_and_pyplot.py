@@ -96,23 +96,22 @@ def draw_power_plot(y_min, y_max):
     plt.savefig("pwr_over_time", edgecolor='r')
     plt.clf()
 
-sera.requestRelay(True)
-print("setting up the device...")
-time.sleep(5)
-#sera.debug_terminal()
-print("done")
-i = 0
-while(1):
-    i+= 1
-    append_current_reading()
-    read_csv()
-    draw_irms_plot(0, 5)
-    draw_power_plot(0, 5*120)
-    if (i == 100):
-        i = 0
-        input("")
-    value = []
-    tt = []
-    power = []
-    #time.sleep(2)
+# testing function
+def periodic_current_samping():
+    sera.requestRelay(True)
+    print("setting up the device...")
+    time.sleep(5)
+    #sera.debug_terminal()
+    print("done")
+    i = 0
+    while(1):
+        i+= 1
+        append_current_reading()
+        read_csv()
+        draw_irms_plot(0, 5)
+        draw_power_plot(0, 5*120)
+        value = []
+        tt = []
+        power = []
+        #time.sleep(2)
 

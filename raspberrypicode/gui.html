@@ -42,8 +42,32 @@
         <li>Disable Power<input type="radio" name="enable" value=0 onclick="turnOffRelay()"></input></li>
       </ul>
 
+      <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+ 
 
     </form>
+
+    <script>
+            function turnOnRelay(){
+                console.log("turning on relay...")
+                $.ajax({
+                  url: "relay_on.py",
+                 context: document.body
+                }).done(function() {
+                 console.log('finished python script');
+                });
+            }
+            function turnOffRelay(){
+                console.log("turning off relay...")
+                $.ajax({
+                  url: "relay_off.py",
+                 context: document.body
+                }).done(function() {
+                 console.log('finished python script');
+                });
+            }
+        </script>
   </div>
 </body>
 
