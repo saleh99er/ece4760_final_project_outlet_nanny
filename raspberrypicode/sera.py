@@ -38,7 +38,7 @@ def getCurrent():
 		rcv_string = str(rcv)
 		if(rcv_string != "b''" and (not checkIfRelayResponse(rcv_string))):
 			confirm = True
-			print(rcv_string) #for debugging
+			#print(rcv_string) #for debugging
 	start_of_num = rcv_string.index("'") + 1 # current reading starts after "b'"
 	end_of_num = rcv_string.index("\\x00") #current reading ends at "\\x00"
 	current_str = rcv_string[start_of_num:end_of_num]
@@ -55,7 +55,7 @@ def setCurrentLimit(lim):
 		time.sleep(0.1)
 		rcv = ser.read(8)
 		rcv_string = str(rcv)
-		print(rcv_string) #for debugging
+		#print(rcv_string) #for debugging
 		if(rcv_string != b'' and (not checkIfRelayResponse(rcv_string))):
 			confirm = True
 			print(rcv_string) #for debugging
@@ -72,10 +72,10 @@ def requestRelay(turnOn):
 		ser.write(b'\r')
 		rcv = ser.read(24)
 		rcv_string = str(rcv)
-		print(rcv_string) #for debugging
+		#print(rcv_string) #for debugging
 
 		confirm = (turnOn and rcv_string == RELAY_ON_CONFIRM_MSG) or (not turnOn and rcv_string == RELAY_OFF_CONFIRM_MSG)
-		print(confirm) #for debugging
+		#print(confirm) #for debugging
 		time.sleep(0.1)
 
 # TEST / Debugging functions

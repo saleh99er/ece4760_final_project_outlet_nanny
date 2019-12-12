@@ -7,6 +7,7 @@ import time
 
 tt = []
 value = []
+power = []
 last_updated_str = 'Last updated ???'
 
 filename = 'plotter_test.csv'
@@ -46,6 +47,8 @@ def read_csv():
                 #print(date_and_time) #for debugging
                 tt.append(dt.datetime.strptime(date_and_time,"%Y-%m-%d %H:%M:%S"))
                 value.append(value_at_time)
+                power.append(120*value_at_time)
+                print(120*value_at_time)
                 #print("Time is...") #for debugging
                 #print(time)
 
@@ -63,8 +66,8 @@ def draw_irms_plot(y_min, y_max):
 
     plt.plot(tt,value, label=last_updated_str)
     #plt.plot(time,value)
-    plt.xlabel('Date')
-    plt.ylabel('Current')
+    plt.xlabel('Date / Time')
+    plt.ylabel('Current (A)')
     plt.title('Avg RMS Current consumed over time')
     plt.gcf().autofmt_xdate() #beautify x-labels
     plt.legend()
@@ -72,6 +75,25 @@ def draw_irms_plot(y_min, y_max):
     axes = plt.gca()
     axes.set_ylim( [y_min, y_max] )
     plt.savefig("avg_irms_over_time", edgecolor='b')
+    plt.clf()
+
+def draw_power_plot(y_min, y_max):
+    global tt
+    global power
+
+    print("# of values " + str(len(power)))
+
+    plt.plot(tt,power, 'r', label=last_updated_str)
+    #plt.plot(time,value)
+    plt.xlabel('Date / Time ')
+    plt.ylabel('Power (W)')
+    plt.title('Power consumed over time')
+    plt.gcf().autofmt_xdate() #beautify x-labels
+    plt.legend()
+    #plt.show()
+    axes = plt.gca()
+    axes.set_ylim( [y_min, y_max] )
+    plt.savefig("pwr_over_time", edgecolor='r')
     plt.clf()
 
 sera.requestRelay(True)
@@ -85,28 +107,12 @@ while(1):
     append_current_reading()
     read_csv()
     draw_irms_plot(0, 5)
+    draw_power_plot(0, 5*120)
     if (i == 100):
         i = 0
         input("")
     value = []
     tt = []
+    power = []
     #time.sleep(2)
 
-def test_serial_and_plotting():
-    sera.requestRelay(True)
-    print("setting up the device...")
-    time.sleep(5)
-    #sera.debug_terminal()
-    print("done")
-    i = 0
-    while(1):
-        i+= 1
-        append_current_reading()
-        read_csv()
-        draw_irms_plot(0, 5)
-        if (i == 100):
-            i = 0
-            input("")
-        value = []
-        tt = []
-    #time.sleep(2)
