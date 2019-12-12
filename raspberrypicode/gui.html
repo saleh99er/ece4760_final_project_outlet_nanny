@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <title>Outlet Nanny</title>
   <script src="main.js"></script>
-
+  <meta http-equiv="refresh" content="5">
 </head>
 
 <body>
@@ -17,10 +17,14 @@
   <!-- graph data here -->
   <div id="Graph">
     <h2> Graph </h2>
-    <div id="graph_stuff"> </div>
-        <img src="avg_irms_over_time.png">
+    <div id="i_plot"> </div>
+        <img id=irms_over_time src="avg_irms_over_time.png">       
+    </div>
+  <div id="p_plot"> </div>
+        <img id=power_over_time src="pwr_over_time.png"> 
   </div>
 
+<!--  -->
   <!-- text output here -->
   <div id="text-output">
     <h2> Output </h2>
@@ -33,7 +37,7 @@
     <form>
 
       <ul>
-        <li><button type="button" onclick="">Manual Replot</button></li>
+        <li><button type="button" onclick="window.location.reload();">Manual Replot</button></li>
         <li>Enable Power <input type="radio" name="enable" value=1 onclick="turnOnRelay()"></input></li>
         <li>Disable Power<input type="radio" name="enable" value=0 onclick="turnOffRelay()"></input></li>
       </ul>
