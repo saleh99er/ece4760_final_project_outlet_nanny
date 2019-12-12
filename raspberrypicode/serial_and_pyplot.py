@@ -2,20 +2,37 @@ import matplotlib.pyplot as plt
 import numpy as np
 import datetime as dt
 import sera
+import csv
 
 tt = []
 value = []
+last_updated_str = 'Last updated ???'
+
+filename = 'plotter_test.csv'
 
 def append_current_reading():
-    
+    currentReading = sera.getCurrent()
+    now = dt.datetime.now()
+    now_str = now.strftime("%Y-%m-%d %H:%M:%S")
+    append_this_row = [now_str , str(currentReading)]
+
+    with open(filename, 'a') as file:
+        writer = csv.writer(file)
+        writer.writerow(append_this_row)
+    last_updated_str = 'Last updated ' + now.strftime("%m %d %H:%M:%S")
+    file.close()
+
 
 def read_csv():
-    with open('plotter_test.csv','r') as file:
+    with open(filename,'r') as file:
     #print("Printing file")
         line_no = 0
         for line in file:
             line_no += 1
             if(line_no == 1): #skip column header 
+                continue
+            elif(line == "" or line == "\n"):
+                line_no -= 1
                 continue
             #print("New Line") #for debugging
 
@@ -37,8 +54,6 @@ def read_csv():
 def draw_irms_plot():
     print("# of values " + str(len(value)))
 
-    now = dt.datetime.now()
-    last_updated_str = 'Last updated ' + now.strftime("%m %d %H:%M:%S")
     plt.plot(tt,value, label=last_updated_str)
     #plt.plot(time,value)
     plt.xlabel('Date')
@@ -49,6 +64,6 @@ def draw_irms_plot():
     plt.show()
     #plt.savefig("avg_irms_over_time", edgecolor='b')
 
-test_current_serial_reading()
+append_current_reading()
 read_csv()
 draw_irms_plot()
