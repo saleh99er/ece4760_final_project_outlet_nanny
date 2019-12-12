@@ -1,4 +1,10 @@
+# for hosting local webserver
 from flask import Flask, render_template
+
+# for plotting over time and Serial
+from serial import Serial
+import csv
+import time
 
 app = Flask(__name__)
 app_debug  = 0 #set 1 if wish to debug with web app

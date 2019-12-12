@@ -4,13 +4,13 @@ import time
 
 salehsPathWindows='C:\\Users\\Dell\\Documents\\Classes\\ECE4760\\ece4760-final-project\\raspberrypicode\\sera.csv'
 salehsPathUbuntu="/home/saleh99er/Documents/schoolStuff/ECE4760/4760_Final/sera.csv"
-
 samadsPath='D:\Samad\Desktop\sera.csv'
-port = 'COM12'
+
+windowsPort = 'COM12'
 ubuntuPort = "/dev/ttyUSB0"
 
 
-ser = Serial(port, baudrate = 9600, timeout = 0) # OPEN SERIAL PORT
+ser = Serial(windowsPort, baudrate = 9600, timeout = 0) # OPEN SERIAL PORT
 print(ser.name) # PRINT PORT THAT WAS USED
 last_rcv_string = "b''"
 rcv = 0
@@ -20,6 +20,21 @@ NEW_LINE = '\\n'
 RELAY_OFF_CONFIRM_MSG = "b'" + NEW_LINE + 'r0 done' + END_MSG + "'"
 RELAY_ON_CONFIRM_MSG = "b'" + NEW_LINE + 'r1 done' + END_MSG + "'"
 
+def getCurrent():
+	confirm = False
+	rcv_string = ''
+	while(not confirm):
+		ser.write(b'i\n')
+		time.sleep(0.1)
+		rcv = ser.read(16)
+		rcv_string = str(rcv)
+		if(rcv_string != "b''"):
+			confirm = True
+			print(rcv_string)
+	start_of_num = rcv_string.index("'") + 1 # current reading starts after "b'"
+	end_of_num = rcv_string.index("\\x00") #current reading ends at "\\x00"
+	current_str = rcv_string[start_of_num:end_of_num]
+	return float(current_str)
 
 
 def setCurrentLimit(lim):
@@ -28,12 +43,13 @@ def setCurrentLimit(lim):
 		lim = float(lim)
 	confirm = False
 	while(not confirm):
-		ser.write(b'l %f' % lim)
-		ser.write(b'\r')
+		ser.write(b'l %f\n' % lim)
+		time.sleep(0.1)
 		rcv = ser.read(8)
 		rcv_string = str(rcv)
-		confirm = False
-		if(rcv_string == b''):
+		print(rcv_string)
+		if(rcv_string != b''):
+			confirm = True
 			print(rcv_string)
 
 def requestRelay(turnOn):
@@ -99,5 +115,5 @@ def test_serialCommsToRaspPi():
 
 # main
 #test_periodicRelayControl()
-debug_terminal()
+#debug_terminal()
 		
