@@ -79,4 +79,6 @@ while(1):
     append_current_reading()
     read_csv()
     draw_irms_plot()
+    value = []
+    tt = []
     #time.sleep(2)
