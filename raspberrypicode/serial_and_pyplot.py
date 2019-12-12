@@ -11,6 +11,8 @@ last_updated_str = 'Last updated ???'
 filename = 'plotter_test.csv'
 
 def append_current_reading():
+    global last_updated_str
+
     currentReading = sera.getCurrent()
     now = dt.datetime.now()
     now_str = now.strftime("%Y-%m-%d %H:%M:%S")
