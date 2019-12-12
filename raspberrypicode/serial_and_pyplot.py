@@ -51,6 +51,7 @@ def read_csv():
 
             except:
                 print("Exception occurred")
+        file.close()
     #print(tt)
     #print(value)
 
@@ -67,7 +68,7 @@ def draw_irms_plot():
     plt.title('Avg RMS Current consumed over time')
     plt.gcf().autofmt_xdate() #beautify x-labels
     plt.legend()
-    plt.show()
+    #plt.show()
     plt.savefig("avg_irms_over_time", edgecolor='b')
 
 sera.requestRelay(True)
@@ -75,10 +76,14 @@ print("setting up the device...")
 time.sleep(5)
 #sera.debug_terminal()
 print("done")
+i = 0
 while(1):
+    i+= 1
     append_current_reading()
     read_csv()
     draw_irms_plot()
+    if (i == 5):
+	    input("")
     value = []
     tt = []
     #time.sleep(2)
