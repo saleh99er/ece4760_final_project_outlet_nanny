@@ -1023,14 +1023,14 @@ void PT_setup (void)
   UARTSetDataRate(UART2, pb_clock, BAUDRATE);
   UARTEnable(UART2, UART_ENABLE_FLAGS(UART_PERIPHERAL | UART_RX | UART_TX));
   
-  // Feel free to comment this out
-  clrscr();
-  home();
+  // Feel free to comment this out (COMMENTED OUT BY SALEH)
+  //clrscr();
+  //home();
   // reverse video control codes
-  normal_text;
-  rev_text ;
+  //normal_text;
+  //rev_text ;
   //printf("...protothreads 1_3_2 07/18/18...");
-  normal_text ;
+  //normal_text ;
   
   // === set up DMA for UART output ==================
   // configure the channel and enable end-on-match

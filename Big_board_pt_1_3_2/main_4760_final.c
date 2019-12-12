@@ -127,10 +127,10 @@ static PT_THREAD (protothread_cmd(struct pt *pt))
     static char cmd[16]; 
     static int value_i;
     static float value_f;
-    sprintf(PT_send_buffer, "PM PIC32 on");
+    sprintf(PT_send_buffer, "PM on");
     PT_SPAWN(pt, &pt_DMA_output, PT_DMA_PutSerialBuffer(&pt_DMA_output) );
-    sprintf(PT_send_buffer, "\n");
-    PT_SPAWN(pt, &pt_DMA_output, PT_DMA_PutSerialBuffer(&pt_DMA_output) );
+    //sprintf(PT_send_buffer, "\n");
+    //PT_SPAWN(pt, &pt_DMA_output, PT_DMA_PutSerialBuffer(&pt_DMA_output) );
       while(1) {
           PT_YIELD_TIME_msec(100);
             PT_SPAWN(pt, &pt_input, PT_GetSerialBuffer(&pt_input) );             
