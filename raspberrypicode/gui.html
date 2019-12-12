@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Outlet Nanny</title>
+  <script src="main.js"></script>
+
+</head>
+
+<body>
+ <h1>Outlet Nanny</h1>
+  <!-- quick button test -->
+  <!-- <p id="demo"> ECE 4760... </p>
+  <button type="button" onclick="myFunction()">Press Me</button> -->
+
+  <!-- graph data here -->
+  <div id="Graph">
+    <h2> Graph </h2>
+    <div id="graph_stuff"> </div>
+        <img src="avg_irms_over_time.png">
+  </div>
+
+  <!-- text output here -->
+  <div id="text-output">
+    <h2> Output </h2>
+  </div>
+
+  <!-- user input here -->
+  <div id="Inputs">
+    <h2> Input </h2>
+    <!-- TO DO -->
+    <form>
+
+      <ul>
+        <li><button type="button" onclick="">Manual Replot</button></li>
+        <li>Enable Power <input type="radio" name="enable" value=1 onclick="turnOnRelay()"></input></li>
+        <li>Disable Power<input type="radio" name="enable" value=0 onclick="turnOffRelay()"></input></li>
+      </ul>
+
+
+    </form>
+  </div>
+</body>
+
+</html>

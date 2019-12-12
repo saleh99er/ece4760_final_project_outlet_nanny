@@ -55,7 +55,7 @@ def read_csv():
     #print(tt)
     #print(value)
 
-def draw_irms_plot():
+def draw_irms_plot(y_min, y_max):
     global tt
     global value
 
@@ -69,6 +69,8 @@ def draw_irms_plot():
     plt.gcf().autofmt_xdate() #beautify x-labels
     plt.legend()
     #plt.show()
+    axes = plt.gca()
+    axes.set_ylim( [y_min, y_max] )
     plt.savefig("avg_irms_over_time", edgecolor='b')
     plt.clf()
 
@@ -82,10 +84,29 @@ while(1):
     i+= 1
     append_current_reading()
     read_csv()
-    draw_irms_plot()
-    if (i == 5):
+    draw_irms_plot(0, 5)
+    if (i == 100):
         i = 0
         input("")
     value = []
     tt = []
+    #time.sleep(2)
+
+def test_serial_and_plotting():
+    sera.requestRelay(True)
+    print("setting up the device...")
+    time.sleep(5)
+    #sera.debug_terminal()
+    print("done")
+    i = 0
+    while(1):
+        i+= 1
+        append_current_reading()
+        read_csv()
+        draw_irms_plot(0, 5)
+        if (i == 100):
+            i = 0
+            input("")
+        value = []
+        tt = []
     #time.sleep(2)
