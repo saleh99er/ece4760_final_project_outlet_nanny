@@ -79,4 +79,4 @@ while(1):
     append_current_reading()
     read_csv()
     draw_irms_plot()
-    time.sleep(10)
+    #time.sleep(2)

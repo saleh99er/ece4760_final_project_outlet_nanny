@@ -38,7 +38,7 @@ def getCurrent():
 		rcv_string = str(rcv)
 		if(rcv_string != "b''" and (not checkIfRelayResponse(rcv_string))):
 			confirm = True
-			print(rcv_string)
+			print(rcv_string) #for debugging
 	start_of_num = rcv_string.index("'") + 1 # current reading starts after "b'"
 	end_of_num = rcv_string.index("\\x00") #current reading ends at "\\x00"
 	current_str = rcv_string[start_of_num:end_of_num]
@@ -55,10 +55,10 @@ def setCurrentLimit(lim):
 		time.sleep(0.1)
 		rcv = ser.read(8)
 		rcv_string = str(rcv)
-		print(rcv_string)
-		if(rcv_string != b''):
+		print(rcv_string) #for debugging
+		if(rcv_string != b'' and (not checkIfRelayResponse(rcv_string))):
 			confirm = True
-			print(rcv_string)
+			print(rcv_string) #for debugging
 
 def requestRelay(turnOn):
 	assert type(turnOn) == bool
@@ -99,7 +99,7 @@ def debug_terminal():
 			time.sleep(0.1)
 			rcv = ser.read(16)
 			rcv_string = str(rcv)
-			if(rcv != b''):
+			if(rcv != b'' ):
 				no_response = False
 			else:
 				no_response = True
@@ -124,5 +124,5 @@ def test_serialCommsToRaspPi():
 # main
 #test_periodicRelayControl()
 #debug_terminal()
-print(checkIfRelayResponse("b'r1 done\\x00'"))
-print(checkIfRelayResponse("b'0.252\\x00"))
+#print(checkIfRelayResponse("b'r1 done\\x00'"))
+#print(checkIfRelayResponse("b'0.252\\x00"))
