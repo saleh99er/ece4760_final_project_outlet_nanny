@@ -97,7 +97,7 @@ def draw_power_plot(y_min, y_max):
     plt.clf()
 
 # testing function
-def periodic_current_samping():
+def periodic_current_samping_and_plotting():
     sera.requestRelay(True)
     print("setting up the device...")
     time.sleep(5)
@@ -115,3 +115,4 @@ def periodic_current_samping():
         power = []
         #time.sleep(2)
 
+periodic_current_samping_and_plotting()
