@@ -70,6 +70,7 @@ def draw_irms_plot():
     plt.legend()
     #plt.show()
     plt.savefig("avg_irms_over_time", edgecolor='b')
+    plt.clf()
 
 sera.requestRelay(True)
 print("setting up the device...")
@@ -83,7 +84,8 @@ while(1):
     read_csv()
     draw_irms_plot()
     if (i == 5):
-	    input("")
+        i = 0
+        input("")
     value = []
     tt = []
     #time.sleep(2)
