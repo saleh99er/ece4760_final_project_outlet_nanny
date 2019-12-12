@@ -3,6 +3,7 @@ import numpy as np
 import datetime as dt
 import sera
 import csv
+import time
 
 tt = []
 value = []
@@ -54,6 +55,9 @@ def read_csv():
     #print(value)
 
 def draw_irms_plot():
+    global tt
+    global value
+
     print("# of values " + str(len(value)))
 
     plt.plot(tt,value, label=last_updated_str)
@@ -64,8 +68,15 @@ def draw_irms_plot():
     plt.gcf().autofmt_xdate() #beautify x-labels
     plt.legend()
     plt.show()
-    #plt.savefig("avg_irms_over_time", edgecolor='b')
+    plt.savefig("avg_irms_over_time", edgecolor='b')
 
-append_current_reading()
-read_csv()
-draw_irms_plot()
+sera.requestRelay(True)
+print("setting up the device...")
+time.sleep(5)
+#sera.debug_terminal()
+print("done")
+while(1):
+    append_current_reading()
+    read_csv()
+    draw_irms_plot()
+    time.sleep(10)

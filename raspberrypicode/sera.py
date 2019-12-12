@@ -20,6 +20,14 @@ NEW_LINE = '\\n'
 RELAY_OFF_CONFIRM_MSG = "b'" + NEW_LINE + 'r0 done' + END_MSG + "'"
 RELAY_ON_CONFIRM_MSG = "b'" + NEW_LINE + 'r1 done' + END_MSG + "'"
 
+def checkIfRelayResponse(str_input):
+	try:
+		print(str_input)
+		str_input.index("r")
+		return True
+	except:
+		return False
+
 def getCurrent():
 	confirm = False
 	rcv_string = ''
@@ -28,7 +36,7 @@ def getCurrent():
 		time.sleep(0.1)
 		rcv = ser.read(16)
 		rcv_string = str(rcv)
-		if(rcv_string != "b''"):
+		if(rcv_string != "b''" and (not checkIfRelayResponse(rcv_string))):
 			confirm = True
 			print(rcv_string)
 	start_of_num = rcv_string.index("'") + 1 # current reading starts after "b'"
@@ -67,7 +75,7 @@ def requestRelay(turnOn):
 		print(rcv_string) #for debugging
 
 		confirm = (turnOn and rcv_string == RELAY_ON_CONFIRM_MSG) or (not turnOn and rcv_string == RELAY_OFF_CONFIRM_MSG)
-		#print(confirm) #for debugging
+		print(confirm) #for debugging
 		time.sleep(0.1)
 
 # TEST / Debugging functions
@@ -116,4 +124,5 @@ def test_serialCommsToRaspPi():
 # main
 #test_periodicRelayControl()
 #debug_terminal()
-		
+print(checkIfRelayResponse("b'r1 done\\x00'"))
+print(checkIfRelayResponse("b'0.252\\x00"))
