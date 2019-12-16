@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Outlet Nanny</title>
+  <script src="main.js"></script>
+  <meta http-equiv="refresh" content="5">
+</head>
+
+<body>
+ <h1>Outlet Nanny</h1>
+  <!-- quick button test -->
+  <!-- <p id="demo"> ECE 4760... </p>
+  <button type="button" onclick="myFunction()">Press Me</button> -->
+
+  <!-- graph data here -->
+  <div id="Graph">
+    <!-- <h2> Graph </h2> -->
+    <div id="i_plot"> </div>
+        <img id=irms_over_time src="avg_irms_over_time.png">       
+    </div>
+  <div id="p_plot"> </div>
+        <img id=power_over_time src="pwr_over_time.png"> 
+  </div>
+
+<!--  -->
+  <!-- text output here -->
+  <!--<div id="text-output">
+    <h2> Output </h2>
+  </div> -->
+
+  <!-- user input here -->
+  <!--<div id="Inputs">
+     <h2> Input </h2>
+    <form>
+
+      <ul>
+        <li><button type="button" onclick="window.location.reload();">Manual Replot</button></li>
+        <li>Enable Power <input type="radio" name="enable" value=1 onclick="turnOnRelay()"></input></li>
+        <li>Disable Power<input type="radio" name="enable" value=0 onclick="turnOffRelay()"></input></li>
+      </ul>
+
+      <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    </form>
+    </div> -->
+
+    <script>
+            function turnOnRelay(){
+                console.log("turning on relay...")
+                $.ajax({
+                  url: "relay_on.py",
+                 context: document.body
+                }).done(function() {
+                 console.log('finished python script');
+                });
+            }
+            function turnOffRelay(){
+                console.log("turning off relay...")
+                $.ajax({
+                  url: "relay_off.py",
+                 context: document.body
+                }).done(function() {
+                 console.log('finished python script');
+                });
+            }
+    </script>
+</body>
+
+</html>
