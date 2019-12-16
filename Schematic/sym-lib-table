@@ -1,4 +1,4 @@
 (sym_lib_table
-  (lib (name 4760_Final-cache)(type Legacy)(uri ${KIPRJMOD}/4760_Final-cache.lib)(options "")(descr ""))
-  (lib (name 4760_Final-rescue)(type Legacy)(uri ${KIPRJMOD}/4760_Final-rescue.lib)(options "")(descr ""))
+  (lib (name 4760_final)(type Legacy)(uri ${KIPRJMOD}/4760_final.lib)(options "")(descr ""))
+  (lib (name PIC32MX250F128B-V_SS)(type Legacy)(uri ${KIPRJMOD}/PIC32MX250F128B-V_SS.lib)(options "")(descr ""))
 )

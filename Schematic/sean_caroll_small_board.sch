@@ -1,0 +1,80 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 3 3
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L PIC32MX250F128B-V_SS:PIC32MX250F128B-V_SS U?
+U 1 1 5E06895F
+P 4050 3900
+AR Path="/5E06895F" Ref="U?"  Part="1" 
+AR Path="/5E0678A5/5E06895F" Ref="U1"  Part="1" 
+F 0 "U1" H 4050 5967 50  0000 C CNN
+F 1 "PIC32MX250F128B-V_SS" H 4050 5876 50  0000 C CNN
+F 2 "SOP65P780X200-28N" H 4050 3900 50  0001 L BNN
+F 3 "32 Bit MCU, 128KB Flash, 32KB RAM, 40 MHz, 28 Pin, 3 Comp, CTMU, RTCC" H 4050 3900 50  0001 L BNN
+F 4 "PIC32MX250F128B-V/SS" H 4050 3900 50  0001 L BNN "Field4"
+F 5 "Unavailable" H 4050 3900 50  0001 L BNN "Field5"
+F 6 "None" H 4050 3900 50  0001 L BNN "Field6"
+F 7 "Microchip" H 4050 3900 50  0001 L BNN "Field7"
+F 8 "SSOP-28 Microchip" H 4050 3900 50  0001 L BNN "Field8"
+	1    4050 3900
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:D D?
+U 1 1 5E068965
+P 2850 2600
+AR Path="/5E068965" Ref="D?"  Part="1" 
+AR Path="/5E0678A5/5E068965" Ref="D4"  Part="1" 
+F 0 "D4" V 2896 2521 50  0000 R CNN
+F 1 "D" V 2805 2521 50  0000 R CNN
+F 2 "" H 2850 2600 50  0001 C CNN
+F 3 "~" H 2850 2600 50  0001 C CNN
+	1    2850 2600
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 5E06896B
+P 2850 2350
+AR Path="/5E06896B" Ref="#PWR?"  Part="1" 
+AR Path="/5E0678A5/5E06896B" Ref="#PWR03"  Part="1" 
+F 0 "#PWR03" H 2850 2200 50  0001 C CNN
+F 1 "+5V" H 2865 2523 50  0000 C CNN
+F 2 "" H 2850 2350 50  0001 C CNN
+F 3 "" H 2850 2350 50  0001 C CNN
+	1    2850 2350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2850 2350 2850 2450
+Wire Wire Line
+	2850 2750 2850 2850
+$Comp
+L Switch:SW_SPDT SW?
+U 1 1 5E068973
+P 2850 3050
+AR Path="/5E068973" Ref="SW?"  Part="1" 
+AR Path="/5E0678A5/5E068973" Ref="SW2"  Part="1" 
+F 0 "SW2" V 2804 3198 50  0000 L CNN
+F 1 "SW_SPDT" V 2895 3198 50  0000 L CNN
+F 2 "" H 2850 3050 50  0001 C CNN
+F 3 "~" H 2850 3050 50  0001 C CNN
+	1    2850 3050
+	0    1    1    0   
+$EndComp
+NoConn ~ 2750 3250
+Wire Wire Line
+	2950 3250 2950 3400
+$EndSCHEMATC
