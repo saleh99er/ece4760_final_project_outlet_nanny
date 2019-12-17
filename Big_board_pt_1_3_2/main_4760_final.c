@@ -247,8 +247,8 @@ void main(void) {
   ///////////////////////////////////////////////////////
   // === Config timer to ========
   // set up timer2 to generate the wave period
-  // goal, sample 1,200 pts / sec
-  // interrupt needs to happen every 8.3*10^-4 s or .83ms
+  // goal, sample 3,000 pts / sec (50 pts per 60Hz)
+  // interrupt needs to happen every 333 microseconds
   //  40 MHz  / 3kHz / 64 (prescalar) = 208 aprox
   OpenTimer2(T2_ON | T2_SOURCE_INT | T2_PS_1_64, 208);                  
   ConfigIntTimer2(T2_INT_ON | T2_INT_PRIOR_2); 
