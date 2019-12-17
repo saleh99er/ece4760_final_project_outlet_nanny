@@ -4,6 +4,7 @@
 </head>
 
 <body>
+    <body style="margin:0;padding:40">
 	<h1>Outlet Nanny</h1>
         <p>
 		Saleh Hassen, sih28 <br> Samad Arshad, sa854 <br>
@@ -101,6 +102,35 @@
 	<p></p>
 
 	<p></p>
+    
+        <h2>Program and Hardware Design</h2>
+            <h3>Program Details</h3>
+                <h4>PIC32 (C)</h4>
+                <p>
+                We implemented our PIC32 code for the Outlet Nanny using a timer interrupt, a timer thread, a command thread, and child UART threads to send/receive. The main function initializes our setup and does round robin scheduling between the timer and command thread using Protothreads.
+                </p>
+                    <h5>ADC</h5>
+                    <p>
+                    We sampled at regular intervals of 3 kHz, 50 times the line frequency of 60 Hz, to get instantaneous current readings. To compute the peak 2 peak current sensor output seen on the ADC, we would store a local maximum/minimum per period and overwrite this once a new max / min was seen. Once the period had finished, point_num is 50, we took the difference to get the peak to peak signal seen in terms of 10 bit ADC reading, then we cleared the local max / min. We would then determine the current empirically. Through several devices with fixed power ratings and a 120V rms ac line, we estimated the expected rms current and used a line of best fit with Google Sheets to determine how to translate a peak to peak ADC to rms current. The current sensor is expected to deviate from it’s 2.5V bias by the one tenth of the current flowing through the device. With the transfer function seen after the low pass filter, the 10 bit ADC that uses 3.3V as reference, and the assumption that the current is a 60Hz pure sinusoid, you get the equation below.
+                    </p>
+                    
+                    <img src="equations.PNG" alt="Equations"
+                    style="width:550px;height:440px;">
+                    
+                    <p>
+                    Our experimentally determined equation is very similar and we talk about possible reasons for the small discrepancy in our results section.
+                    </p>
+                    
+                    <p>
+                    We then reset our interrupt counter, preparing for a new period of current sensor data to poll. Lastly, once the RMS current seen by the sensor is computed we check if this is above the limit specified by the user with the ‘l’ command, if so increment the overcurrent counter, oc_cntr, by one, otherwise reset this counter to zero. This value is compared in our timer thread to determine if the device should switch to current protection mode.
+                    </p>
+                    
+                    <h5>UART</h5>
+                    <p>
+                    A thread is used to manage UART Serial communication so the microcontroller appears as a command interface when interacting with it through PuTTY. We prompt the user the device is on and continually take in their input with PT_GetSerialBuffer, use sscanf to parse command arguments from the char array, and use PT_DMA_PutSerialBuffer to transmit a response, similar to Serial_1_2_3_test_all.c and Lab 3, however our code is a little less efficient and instead of using case statements we use if/else conditionals. The user can enter up to 16 characters per command, where the first letter is the command type and the character following this and a space character are the input argument, and terminate the command by pressing the enter/return key. One command is the user manually setting/clearing the relay, they can control it if the device isn’t in current protection mode, if so a nonzero input turns on the relay by clearing the relay control signal on the PIC32. Note that a Red LED is set and cleared the complement of the PIC32 control signal to display that the Relay is on, providing power to the client outlet sockets. A zero input sets the control signal, disabling the relay. Then a confirmation message is sent. If the device is in current protection mode, the relay control signal isn’t adjusted and the user is prompted the device is current limited. In addition other commands are:
+                    </p>
+                
+            <h3>Hardware Details</h3>
 
 <!-- 
 	<h2>Design Details</h3>
