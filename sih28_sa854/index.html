@@ -372,7 +372,7 @@ body {
                 </p>
                 
                 <p>
-                We determined a low pass filter was desired since we wanted to pass 60 Hz current sensor readings while ignoring the higher frequency content. We also wanted to have a resistance of less than 1kOhm with our current ADC configuration. We ended up choosing a 10uF capacitor, giving us a cutoff frequency of 159 Hz. Note that because our pass band allows the current sensor output to pass through with nearly no voltage drop and our ADC configuration to use 3.3V and ground, we have an implicit maximum current limit of 8A. If a device pulls more current than this, the ADC will force the microcontroller to restart. We were unable to change this in time but we recommend a resistor in parallel with the low pass’s capacitor so the current sensor output is readable by the microcontroller for a greater range of load currents.
+                We determined a low pass filter was desired since we wanted to pass 60 Hz current sensor readings while ignoring the higher frequency content. We also wanted to have a resistance of less than 1kOhm with our current ADC configuration. We ended up choosing a 100 ohm resistor & 10uF capacitor, giving us a cutoff frequency of 159 Hz. Note that because our pass band allows the current sensor output to pass through with nearly no voltage drop and our ADC configuration to use 3.3V and ground, we have an implicit maximum current limit of 8A. If a device pulls more current than this, the ADC will force the microcontroller to restart. We were unable to change this in time but we recommend a resistor in parallel with the low pass’s capacitor so the current sensor output is readable by the microcontroller for a greater range of load currents.
                 </p>
                 
                 <p>
@@ -402,7 +402,7 @@ body {
             <li>The Raspberry Pi Zero W’s internet capabilities did not work with Cornell’s wi-fi. We were unable to forward a wifi connection from a computer through serial (before we realized the constraints of WLAN).</li>
             <li>Some electrical devices cause UART to send seemingly random characters.</li>
             <li>Using a small container for our device rather than a larger one made hardware debugging slightly more time consuming.</li>
-            <li>The current sensor broke at one point, and we couldn’t get any oscilloscope readings, forcing us to replace it.</li>
+            <li>The current sensor broke at one point, and we couldn’t get any oscilloscope readings, forcing us to replace it, retesting the sensor and reintegrating it in our outlet box.</li>
             <li>We tried building a current sensor ourselves when our first one broke, but it ended up not working.</li>
             <li>Using FFT for the ADC readings was a futile effort, as the regular sampling method was what we ended up using, and it was within about 11% error of actual values. The FFT implementation was not worth the time and effort, but could be a good improvement in the future.</li>
             </ul>
@@ -514,6 +514,10 @@ body {
         
             <h3>Program Listing</h3>
                 <h4><a href="https://raw.github.coecis.cornell.edu/sih28/ece4760-final-project/master/Big_board_pt_1_3_2/main_4760_final.c?token=AAABN6YGYP3VNBVLP4QA5ZC6AMTKA">Main PIC32 Code (C)</a></h4>
+
+                <h4><a href="https://raw.github.coecis.cornell.edu/sih28/ece4760-final-project/master/Big_board_pt_1_3_2/config_1_3_2.h?token=AAAA55BUGSJNRVSZWT3JD5C6AN5QM">Configuration header (C)</a></h4>
+
+                <h4><a href="https://raw.github.coecis.cornell.edu/sih28/ece4760-final-project/master/Big_board_pt_1_3_2/pt_cornell_1_3_2.h?token=AAAA55FWSWVU5L7L3B76MWS6AN5RU">Altered protothreads header (C)</a></h4> 
                 
                 <h4><a href="https://raw.github.coecis.cornell.edu/sih28/ece4760-final-project/master/raspberrypicode/sera.py?token=AAABN64KYWX7ZSTY65JVWFC6AMTRY">Serial Input Code (Python)</a></h4>
                 
@@ -523,9 +527,10 @@ body {
             <h3>Hardware Schematics</h3>
             <img src="outletbox_schem.png">
             <img src="board_and_per.png">
+            <h4><a href="">Schematic of project (Kicad)</a></h4>
             
             <h3><a href="https://docs.google.com/spreadsheets/d/18cqE4Pgc4_iT54x_7nFSSPi_hINx9QCSq084MaUKshM/edit?usp=sharing">Bill of Materials</a></h3>
-            <img src="costs.PNG">
+            <img src="budget.png">
             
             <h3>Division of Labor</h3>
             <img src="work.PNG"><br>
