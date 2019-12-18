@@ -354,9 +354,7 @@ Text Notes 2400 2350 0    50   ~ 0
 HOT after Current Sensor\n(still black)
 Text Notes 1100 2900 0    197  ~ 0
 Outlet Box 
-Text Notes 1750 4450 0    197  ~ 0
-PIC32 + Peripherals
-Text Notes 5300 5200 0    39   ~ 0
+Text Notes 5300 5200 0    47   ~ 0
 Inverter \n(Digital Output \n3.3V to 5V buffer)
 Text Notes 2300 950  0    39   ~ 0
 Hall Effect Current Sensor\n
@@ -530,9 +528,9 @@ $EndComp
 Wire Wire Line
 	1950 5050 2300 5050
 Connection ~ 1950 5050
-Text Notes 1150 5400 0    39   ~ 0
+Text Notes 1150 5400 0    47   ~ 0
 low pass filter\nfcutoff = 159 Hz
-Text Notes 800  5750 0    39   ~ 0
+Text Notes 800  5850 0    47   ~ 0
 may desire a voltage drop in \npass band too to measure \ninstantaneous currents \ngreater than 5A
 Text Label 2300 4900 2    50   ~ 0
 I_READING_FLTRED
@@ -620,11 +618,11 @@ Wire Wire Line
 	1750 6300 1950 6300
 Wire Wire Line
 	1750 6400 1950 6400
-Text Notes 900  6200 0    39   ~ 0
+Text Notes 750  6200 0    47   ~ 0
 GREEN (TX Computer)\n
-Text Notes 900  6300 0    39   ~ 0
+Text Notes 750  6300 0    47   ~ 0
 WHITE (RX Computer)
-Text Notes 1300 6400 0    39   ~ 0
+Text Notes 750  6400 0    47   ~ 0
 BLACK
 Text Label 1950 6300 0    39   ~ 0
 TX_PIC32
@@ -641,7 +639,7 @@ F 3 "" H 1950 6400 50  0001 C CNN
 	1    1950 6400
 	1    0    0    -1  
 $EndComp
-Text Notes 4200 4900 0    39   ~ 0
+Text Notes 4200 4900 0    47   ~ 0
 Indicator LEDs\n
 Wire Wire Line
 	4100 5900 4100 5700
@@ -652,14 +650,18 @@ Text Notes 2550 6000 0    39   ~ 0
 (RA1)
 Text Notes 3450 5900 0    39   ~ 0
 RA1
-Text Notes 3200 6000 0    39   ~ 0
+Text Notes 3150 6000 0    47   ~ 0
 (RB10)
-Text Notes 3200 5600 0    39   ~ 0
+Text Notes 3200 5600 0    47   ~ 0
 (RB0)
-Text Notes 3200 5800 0    39   ~ 0
+Text Notes 3200 5800 0    47   ~ 0
 (RB2)
-Text Notes 3200 5350 0    39   ~ 0
+Text Notes 3200 5350 0    47   ~ 0
 (RB1)
-Text Notes 3200 5150 0    39   ~ 0
+Text Notes 3200 5150 0    47   ~ 0
 (RA0)
+Text Notes 2500 5150 0    50   ~ 0
+(RB13)
+Text Notes 1750 4450 0    197  ~ 0
+PIC32 + Peripherals
 $EndSCHEMATC
