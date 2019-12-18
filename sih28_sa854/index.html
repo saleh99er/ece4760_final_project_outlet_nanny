@@ -14,8 +14,8 @@
         In this project, we monitor the power usage of everyday devices and control them through a serial interface.
         </p>
     
-        <img src="Device_without_cover_plate.jpg" alt="Device without cover plate"
-        style="width:760px;height:600px;">
+        <img src="OutletNanny.jpg" alt="Device"
+        style="width:800px;height:450px;">
     
         <h2>Introduction</h2>
         <p>
@@ -105,17 +105,26 @@
     
         <h2>Program and Hardware Design</h2>
             <h3>Program Details</h3>
+                <h4>Main Computer (Python)<h4>
+                <p>
+                Placeholder text.
+                </p>
+                
                 <h4>PIC32 (C)</h4>
                 <p>
                 We implemented our PIC32 code for the Outlet Nanny using a timer interrupt, a timer thread, a command thread, and child UART threads to send/receive. The main function initializes our setup and does round robin scheduling between the timer and command thread using Protothreads.
                 </p>
                     <h5>ADC</h5>
+                    <img src="timer.png" alt="Timer thread"
+                    style="width:400px;height:480px;">
+                    
                     <p>
+                    
                     We sampled at regular intervals of 3 kHz, 50 times the line frequency of 60 Hz, to get instantaneous current readings. To compute the peak 2 peak current sensor output seen on the ADC, we would store a local maximum/minimum per period and overwrite this once a new max / min was seen. Once the period had finished, point_num is 50, we took the difference to get the peak to peak signal seen in terms of 10 bit ADC reading, then we cleared the local max / min. We would then determine the current empirically. Through several devices with fixed power ratings and a 120V rms ac line, we estimated the expected rms current and used a line of best fit with Google Sheets to determine how to translate a peak to peak ADC to rms current. The current sensor is expected to deviate from it’s 2.5V bias by the one tenth of the current flowing through the device. With the transfer function seen after the low pass filter, the 10 bit ADC that uses 3.3V as reference, and the assumption that the current is a 60Hz pure sinusoid, you get the equation below.
                     </p>
                     
                     <img src="equations.PNG" alt="Equations"
-                    style="width:550px;height:440px;">
+                    style="width:400px;height:320px;">
                     
                     <p>
                     Our experimentally determined equation is very similar and we talk about possible reasons for the small discrepancy in our results section.
@@ -126,11 +135,78 @@
                     </p>
                     
                     <h5>UART</h5>
+                    <img src="cmd.PNG" alt="Command thread"
+                    style="width:550px;height:560px;">
+                    
                     <p>
                     A thread is used to manage UART Serial communication so the microcontroller appears as a command interface when interacting with it through PuTTY. We prompt the user the device is on and continually take in their input with PT_GetSerialBuffer, use sscanf to parse command arguments from the char array, and use PT_DMA_PutSerialBuffer to transmit a response, similar to Serial_1_2_3_test_all.c and Lab 3, however our code is a little less efficient and instead of using case statements we use if/else conditionals. The user can enter up to 16 characters per command, where the first letter is the command type and the character following this and a space character are the input argument, and terminate the command by pressing the enter/return key. One command is the user manually setting/clearing the relay, they can control it if the device isn’t in current protection mode, if so a nonzero input turns on the relay by clearing the relay control signal on the PIC32. Note that a Red LED is set and cleared the complement of the PIC32 control signal to display that the Relay is on, providing power to the client outlet sockets. A zero input sets the control signal, disabling the relay. Then a confirmation message is sent. If the device is in current protection mode, the relay control signal isn’t adjusted and the user is prompted the device is current limited. In addition other commands are:
+                    
+                    <ul>
+                    <li>m (to manually get out of current protection mode)</li>
+                    <li>i (report last rms current computed)</li>
+                    <li>p (report power reading based on last current reading)</li>
+                    <li>l (adjust current limit to argument value)</li>
+                    <li>s (get status, whether the device is in current protection mode)</li>
+                    <li>a (report raw adc reading last seen)</li>
+                    </ul>
+                    
+                    If the user input doesn’t fall under any of the above commands, the user is prompted the command is unknown. Unfortunately this implementation is space sensitive, but is still functional and reliable. This thread yields every 100 milliseconds to give other threads several opportunities to execute, especially back when we attempted Fast Fourier Transforms for current sensor data parsing. However this yield time prevents the parsing of a command sent less than 100 ms after the previous one.
                     </p>
+                    
+                    <p>
+                    We use the human readable variant of the GetSerialBuffer child thread with a modification, when interacting exclusively with a human, we use the Protothreads header as is and each character received is sent back for user feedback. However once we wanted our python scripts for the computer to parse the serial response, we decided to comment out the portion of UART that sends all characters received. The machine buffer also offers this but requires more work to do so and doesn’t yield waiting for the user to input a new character but yields based on whether a DMA transfer is done. With humans typing relatively slow to the UART data transaction, we get better CPU Utilization using the human readable pthread. Even when our computer is interacting with the device via python script since we would want to send our commands only so often. To make this change we only need to vary GetSerialBuffer in pt_cornell_1_3_2.h.
+                    </p>
+                    
+                    <h5>Timer</h5>
+                    <img src="pic32timer.png" alt="PIC32 timer thread"
+                    style="width:460px;height:380px;">
+                    
+                    <p>
+                    A timer thread is used to toggle a heartbeat LED and check if the device over current counter is over 100, which means for over 1.6 seconds the RMS current is greater than the limit.  Under this condition, the current protection LED is set, and the relay (with it’s LED) is shut off, cutting off client power outlet sockets. The reason why we check if we pulled our current limit for a set amount of time in the timer thread was to guarantee the device cannot enter current protection mode in less than a second of duration with the thread acting as a buffer since this thread can only execute once a second and the timer oc_cntr is required to be greater than 100. Since the counter can only increment at 60Hz, the first execution of the timer thread immediately after the oc_cntr is reset to zero can’t set off current protection mode.
+                    </p>
+                    
+                    <h5>Main</h5>
+                    <img src="main.png" alt="PIC32 timer thread"
+                    style="width:460px;height:160px;">
+                    
+                    <p>
+                    Placeholder text.
+                    </p>
+            
+            <h3>Software References</h3>
+            <a href="https://pyserial.readthedocs.io/">pySerial Library and Examples</a><br>
+            <a href="https://matplotlib.org/">Matplotlib Library and Examples</a><br>
+            <a href="http://people.ece.cornell.edu/land/courses/ece4760/">Professor Land’s ADC/UART code (Labs 2 and 3) and his Protothreads interface</a><br>
+                    
                 
             <h3>Hardware Details</h3>
+            <img src="outletbox_schem.png" alt="Outlet box"
+            style="width:760px;height:400px;">
+            <img src="board_and_per.png" alt="PIC32"
+            style="width:760px;height:400px;">
+            
+            <h3>Hardware References</h3>
+            <a href="http://people.ece.cornell.edu/land/courses/ece4760/PIC32/index_UART.html">Universal Asynchronous Receiver-Transmitter (UART) Serial</a><br>
+            <a href="http://people.ece.cornell.edu/land/courses/ece4760/PIC32/index_ADC.html">Analog-to-Digital Converter</a><br>
+            <a href="https://en.wikipedia.org/wiki/AC_power_plugs_and_sockets">AC Plugs and Sockets</a><br>
+            <a href="https://docs.broadcom.com/docs/ACHS-712x-DS101">ACHS 7122 (Current Sensor) Datasheet</a><br>
+            <a href="https://www.mouser.com/datasheet/2/307/g3ne_ds_e_4_1_csm166-1221231.pdf">G3NE-210T-US-DC5 (Relay) Datasheet</a><br>
+            <a href="https://www.lowes.com/pd/CARLON-2-Gang-Blue-PVC-New-Work-Standard-Switch-Outlet-Wall-Electrical-Box/50053877">PVC 2-Gang Outlet Box</a><br>
+            <a href="https://www.lowes.com/pd/Legrand-White-15-Amp-Duplex-Residential-Outlet/3235958">Duplet Outlet Socket</a><br>
+            <a href="https://www.lowes.com/pd/Eaton-15-Amp-Single-pole-White-Toggle-Residential-Light-Switch/1098293 ">SPST Switch 120V/15A</a><br>
+            <a href="https://www.lowes.com/pd/Legrand-2-Gang-White-Double-Standard-Wall-Plate/1000397809?cm_mmc=shp-_-c-_-prd-_-rpe-_-google-_-pla-_--_-soswiringdevices-_-1000397809-_-0&placeholder=null&gclid=EAIaIQobChMIodaLxbK75gIVjJ-zCh0PnwjVEAQYASABEgL7mfD_BwE&gclsrc=aw.ds">2-Gange Outlet and Switch Plate</a><br>
+            <a href="https://nurdspace.nl/images/e/e0/ESP8266_Specifications_English.pdf">Considered: ESP8226 (Wifi Module) Datasheet</a><br>
+            
+            <h3>Bumps in the Road</h3>
+            <ul>
+            <li>The Raspberry Pi Zero W’s internet capabilities did not work with Cornell’s wi-fi.</li>
+            <li>Some electrical devices cause UART to send seemingly random characters.</li>
+            <li>Using a small container for our device rather than a larger one made hardware debugging slightly more time consuming.</li>
+            <li>The current sensor broke at one point, and we couldn’t get any oscilloscope readings, forcing us to replace it.</li>
+            <li>We tried building a current sensor ourselves when our first one broke, but it ended up not working.</li>
+            <li>Using FFT for the ADC readings was a futile effort, as the regular sampling method was what we ended up using, and it was within about 11% error of actual values. The FFT implementation was not worth the time and effort, but could be a good improvement in the future.</li>
+            </ul>
+            
 
 <!-- 
 	<h2>Design Details</h3>
