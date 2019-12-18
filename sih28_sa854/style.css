@@ -2911,5 +2911,13 @@ a[href='#icon-zoom-out']::before {
   text-align: center;
   padding: 4px;
 }
+table, th, td {
+  border: 1px solid black;
+  padding: 5px;
+}
 
+iframe{
+display: block;
+margin: 0 auto;
+}
 /* ==Boxed reddit CSS Theme v1.9.0 - (http://www.reddit.com/r/boxed/)== */
