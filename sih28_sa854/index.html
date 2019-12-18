@@ -473,8 +473,7 @@ body {
             </p>
             
             <p>
-            FFT could also be considered so we could not only measure the current sensor at the line’s fundamental frequency but it’s harmonics too to determine the client device(s)’s power factor and reporting back it’s maximum possible efficiency. This feature would require a lot more data processing and computation on our PIC32.
-            </p>
+            FFT could also be considered so we could not only measure the current sensor at the line’s fundamental frequency but it’s harmonics too to determine the client device(s)’s power factor and reporting back it’s maximum possible efficiency. The only additional hardware change needed would require an isolated voltage sensor. This feature would require a lot more data processing and computation on our PIC32 for better accuracy and improved functionality.             </p>
             
             <p>
             The last feature change would be to account for high load device current draw and to be able to handle the full sweep of the current sensor’s output on our PIC32 ADC. The easiest and quickest fix is to place a resistor in parrallel with the low pass’s capacitor to have a voltage divider for our pass through frequencies but we’d need to readjust our equation to adjust an ADC reading to an RMS current. This is the least costly to readjust.
