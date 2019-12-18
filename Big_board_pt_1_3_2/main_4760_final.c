@@ -268,8 +268,6 @@ void main(void) {
   // init the threads
   PT_INIT(&pt_timer);
   PT_INIT(&pt_cmd);
-  // seed random color
-  srand(1);
 
   // round-robin scheduler for threads
   while (1){
