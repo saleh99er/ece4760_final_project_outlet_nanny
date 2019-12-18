@@ -1,11 +1,21 @@
 <html>
 <head>
-    <link rel="stylesheet" href="style.css">
+<div class="header">
+<h1>The Outlet Nanny</h1>
+</div>
+<link rel="stylesheet" href="style.css">
 </head>
+ <style>
+body {
+  background-image: url('background.jpg');
+  background-repeat:no-repeat;
+  background-size:cover;
+}
+</style> 
+
 
 <body>
     <body style="margin:0;padding:40">
-	<h1>Outlet Nanny</h1>
         <p>
 		Saleh Hassen, sih28 <br> Samad Arshad, sa854 <br>
         </p>
@@ -15,7 +25,7 @@
         </p>
     
         <img src="OutletNanny.jpg" alt="Device"
-        style="width:800px;height:450px;">
+        style="width:500px;height:450px;">
         
         <h2>Table of Contents</h2><h3>
         <ul class="circle">
@@ -52,6 +62,7 @@
           <li><a href="#SRef">Software References</a></li>
           <li><a href="#HDetails">Hardware Details</a></li>
             <ul class="decimal">
+            <li><a href="#current_sensor">Current Sensor</a></li>
             <li><a href="#OBox">Outlet Box</a></li>
             <li><a href="#PCircuitry">PIC32 Peripheral Circuitry</a></li>
             </ul>
@@ -68,9 +79,11 @@
         <li><a href="#conc">Conclusions</a></li>
           <ul class="decimal">
           <li><a href="#refl">Reflection</a></li>
+          <li><a href="#futureimprovements">Improvements and in Hindsight</a></li>
           <li><a href="#safetystandards">Safety Standards Consideration</a></li>
           <li><a href="#intel">Intellectual Property</a></li>
           <li><a href="#ethics">IEEE Code of Ethics</a></li>
+          <li><a href="#legal">Legal Considerations</a></li>
           </ul>
         <li><a href="#Appendix">Appendix</a></li>
         </ul>
@@ -127,7 +140,7 @@
                 <a name="Htradeoffs"></a>
                 <h4>Hardware</h4>
                 <p>
-                We considered a few tradeoffs for hardware and software when developing the device. We had the intention of incorporating the a Raspberry Pi into our project for website hosting and IoT, due to the wi-fi capabilities not working as expected and us running out of time on the project, we ended up dropping this feature. This worked in our favor in terms of our device efficiency since this would have consumed 0.5A of DC current on it’s own, making our device more wasteful to power the overhead. In addition, the 5V power brick in use was limited to 1A DC, with the relay taking up 0.2A DC, this would have put us close to over budget for DC current consumption. In hindsight we realized a ESP8266 would have been a better fit for providing the needed connection to the internet and the use of a carbon neutral server such as Google Cloud to provide the web gui to interact with the device remotely.
+                We considered a few tradeoffs for hardware and software when developing the device. We had the intention of incorporating the a Raspberry Pi into our project for website hosting and IoT, due to the wi-fi capabilities not working as expected and us running out of time on the project, we ended up dropping this feature. This worked in our favor in terms of our device efficiency since this would have consumed 0.5A of DC current on it’s own, making our device more wasteful to power the overhead. In addition, the 120V AC to 5V rectifier (which we nickname the “power brick”) in use was limited to 1A DC, putting us closer to being over budget for DC current consumption. In hindsight we realized a ESP8266 would have been a better fit for providing the needed connection to the internet and the use of a carbon neutral server such as Google Cloud to provide the web gui to interact with the device remotely.
                 </p>
                 
                 <p>
@@ -256,7 +269,7 @@
                     </p>
                     
                     <p>
-                    We use the human readable variant of the GetSerialBuffer child thread with a modification, when interacting exclusively with a human, we use the Protothreads header as is and each character received is sent back for user feedback. However once we wanted our python scripts for the computer to parse the serial response, we decided to comment out the portion of UART that sends all characters received. The machine buffer also offers this but requires more work to do so and doesn’t yield waiting for the user to input a new character but yields based on whether a DMA transfer is done. With humans typing relatively slow to the UART data transaction, we get better CPU Utilization using the human readable pthread. Even when our computer is interacting with the device via python script since we would want to send our commands only so often. To make this change we only need to vary GetSerialBuffer in pt_cornell_1_3_2.h.
+                    We use the human readable variant of the GetSerialBuffer child thread with a modification, when interacting exclusively with a human, we use the Protothreads header as is and each character received is sent back for user feedback. However once we wanted our python scripts for the computer to parse the serial response, we decided to comment out the portion of UART that sends all characters received. The machine buffer also offers this but requires more work to do so and doesn’t yield waiting for the user to input a new character but yields based on whether a DMA transfer is done. With humans typing relatively slow to the UART data transaction, we get better CPU Utilization using the human readable pthread. Even when our computer is interacting with the device via python script since we would want to send our commands only so often. To make this change we only need to vary GetSerialBuffer in <a href="https://raw.github.coecis.cornell.edu/gist/sa854/6608aff0b39048ff4e2c97c5667d2ca5/raw/f3cd45f3be7b379aaf4bfa6fa92ca6cb68226989/pt_cornell_1_3_2.h?token=AAAA55HUMUZSODIMUQM5MNS6ALU54">pt_cornell_1_3_2.h.</a>
                     </p>
                     
                     <a name="Timer"></a>
@@ -295,33 +308,101 @@
                     
             <a name="HDetails"></a>    
             <h3>Hardware Details</h3>
+                <a name="current_sensor"></a>
+                <h4>Current Sensor</h4>
+                <img src="csensor.PNG">
+                <p>
+                Our project relied on finding a feasible current sensor: given a current passing through or near the device, an output voltage proportional (or somewhat related) to this current is seen that wouldn’t bottleneck the desired RMS current of 5A or less. Furthermore, the voltage of the current being sensed would be 120 V RMS, with peak voltages near +/- 170 V, so isolation between the voltage output and the current sensor would be desirable. We looked at several devices but determined the ACHS7122 would fit our needs very well. The device requires the measured current to go through the device, entering on Pin 1 and 2 and exiting on Pin 3 and 4. Since current generates a magnetic field and with a Hall effect sensor it can measure a voltage across a Hall element due to a magnetic field, the ACHS7122 can measure the current passing through the device with great accuracy. The sensitivity of the device is 100mV/A and the zero current offset is halfway between Vdd and ground. An offset from ground is needed since the PIC32 will measure this through it’s ADC and our current setup requires the output voltage to be between ground and 3.3V. If the current through the device and it’s sensitivity attempts to produce an output voltage below ground or above it’s input voltage, it would saturate at its respective rail.
+                </p>
+                
+                <img src="solder.PNG">
+                
+                <p>
+                We populated the current sensor on an adapter board the course provided by Adafruit that made the SOIC footprint component compatible with solder boards and increased conduction for the current terminals. The image above shows the components placed on a small solder board without the hot wires in our power path soldered (would be connected to the left side).  Under the tape is our two capacitors needed to set bandwidth and a bypass capacitor as the two are prone to shorting each other with how we placed them. We then tested the sensor on it’s own with 2 DC power supplies and a 4 ohm high-wattage resistor. We powered the current sensor with 5V and drove a separate 5V through the resistor load with the current sensor’s current terminals in series. We expected the current sensor output to be:
+                
+                <blockquote>
+                2.5V + (0.1V/A)(1.25A) = 2.625V
+                </blockquote>
+                </p>
+                
+                <img src="osci.PNG">
+                
+                <p>
+                Through the oscilloscope when the load power supply was turned on we found the measured output was 2.62V, within 4% error. 
+                </p>
+
+                
                 <a name="OBox"></a>
                 <h4>Outlet Box</h4>
                 <img src="outletbox_schem.png" alt="Outlet box"
-                style="width:760px;height:400px;"><br>
+                style="width:760px;height:400px;">
+                
+                <p>
+                Once we confirmed our current sensor, we developed the outlet box with an incremental approach in mind while avoiding as many temporary connections as possible. We first needed to test the functionality of the relay Bruce provided us, the G3NE-210T-US-DC5, but didn’t want to risk accidental execution. For this reason we asked Bruce for an old power strip and removed it’s mechanical switch with our relay and confirmed whether we could control the relay to conduct if a 5V signal was provided on it’s input side. Note unlike the previous 4760 projects, this project required thick wiring to provide sufficient conduction for our power path. This prevented us from utilizing simple connection methods such as small jumpers and breadboards to connect & test our outlet box circuit. To connect a relay to the extension cord’s supply and client hot power while making it convenient to swap between the temporary extension cord and our future device, we used socket crimp connectors and 12 AWG wire with some soldering.
+                </p>
+                
+                <img src="relayblock.PNG">
+                
+                <p>
+                We confirmed this and then designed our Outlet box schematic. We first pictured the trivial case of an extension cord where the Neutral, Hot, and GFCI connections on our supply plug would be forwarded to the client sockets. We connected to the client socket via screw terminals on 12 AWG wires with the strands soldered together. We then added a mechanical switch that could control whether the entire device has power or not. We intended this as a safety precaution in case our device fails, we’d like to offer a quick way to (attempt to) disconnect the device from the AC line. Placing the switch any later in the power path would fail to disconnect the AC line for all other portions of the outlet box. We then passed the hot wire after our mechanical switch through our current sensor and then to the relay. We then connected the other load terminal of our relay to the hot terminal of the client outlets. Afterwards, we excluded the 5V power brick needed to convert the supply line to 5V DC (for our current sensor and PIC32), to first confirm the outlet box behaves like an extension cord, but along with a mechanical switch, there are relay wires which require a 5v input to turn on the client device’s power. We found the device passed this functionality.
+                </p>
+                
+                <img src="wires.PNG">
+                
+                <p>
+                Then we prepared the wiring needed to power the 5V power brick. We had to offer two more connections for our outlet box, one on the hot connection after our current sensor to our power brick, and neutral to power brick. The plug terminal used on the brick made it convenient to connect to with socket crimp connectors. We wanted our device to be able to measure its own power usage and current consumption so we wanted to make the power brick used to power our PIC32 and other 5V logic was in series with our current sensor.
+                </p>
+                
+                <img src="noplate.PNG">
+                
+                <p>
+                Keep in mind the above images are before our final pass of electrical tape applied to insulate connections and prevent shorts. When it was time to put everything into the PVC box, we had a frustrating time to get it all to fit. We underestimated the physical resistance to reroute 12 AWG wires. We placed the power. The final physical placement involved the power brick underneath the switch, the relay underneath the client sockets, and the current sensor a little below and next to the switch. Once we had the physical placement down we found the relay control lines, current sensor output, 5V, and ground all needed to be routed out of the box and convenient side drill holes would be desired. We made the holes and put the device back together again this time testing both control over the client power while measuring the current sensor output with an oscilloscope.
+                </p>
+                
+                <p>
+                When our current sensor broke we attempted to develop our own AC current clamp as a replacement. The device would behave like a transformer and show a smaller but proportional current on the secondary winding proportional to the primary wire’s. We attempted this until we had to leave for thanksgiving break since we lost our spare components and wouldn’t get our replacements until after break. Unfortunately, this rushed attempt failed, most likely due to the lack of quality of the transformer we made, we salvaged an old core magnet and made about 80 windings by hand with some accidental overlap between every few turns.
+                </p>
                 
                 <a name="PCircuitry"></a>
                 <h4>PIC32 Peripheral Circuitry</h4>
                 <img src="board_and_per.png" alt="PIC32"
                 style="width:760px;height:400px;"><br>
-            
+                
+                <p>
+                The last portion of our project we developed hardware for was the solder board & small PIC32 board used to put our PIC32 Peripheral circuitry together. This included the low pass filter on our current sensor readings, three status LEDs, UART communication lines, and an inverter to drive the relay with 5V or ground.
+                </p>
+                
+                <p>
+                We followed the instructions provided to populate the Small Sean Carroll PIC32 board and flashed code to toggle one of the LEDs per second to confirm it works.
+                </p>
+                
+                <p>
+                We determined a low pass filter was desired since we wanted to pass 60 Hz current sensor readings while ignoring the higher frequency content. We also wanted to have a resistance of less than 1kOhm with our current ADC configuration. We ended up choosing a 10uF capacitor, giving us a cutoff frequency of 159 Hz. Note that because our pass band allows the current sensor output to pass through with nearly no voltage drop and our ADC configuration to use 3.3V and ground, we have an implicit maximum current limit of 8A. If a device pulls more current than this, the ADC will force the microcontroller to restart. We were unable to change this in time but we recommend a resistor in parallel with the low pass’s capacitor so the current sensor output is readable by the microcontroller for a greater range of load currents.
+                </p>
+                
+                <p>
+                The inverter acts as a buffer so we can drive 5V on the relay through the PIC32’s 3.3V. This way the current needed to drive the relay isn’t driven from the PIC32 but the 5V supply line Vin. Vin is the voltage seen from the Small PIC32 board that’s on only if the small board’s switch is on. This prevents the relay from being turned on while the PIC32 is off.
+                </p>
+
             <a name="HRef"></a>
             <h3>Hardware References</h3>
-            <a href="http://people.ece.cornell.edu/land/courses/ece4760/PIC32/index_UART.html">Universal Asynchronous Receiver-Transmitter (UART) Serial</a><br>
-            <a href="http://people.ece.cornell.edu/land/courses/ece4760/PIC32/index_ADC.html">Analog-to-Digital Converter</a><br>
+            <a href="https://archive.org/details/gov.law.nfpa.nec.2014/page/n5">2014 National Electrical Code</a><br>
+            <a href="https://www.lowes.com/pd/Legrand-2-Gang-White-Double-Standard-Wall-Plate/1000397809?cm_mmc=shp-_-c-_-prd-_-rpe-_-google-_-pla-_--_-soswiringdevices-_-1000397809-_-0&placeholder=null&gclid=EAIaIQobChMIodaLxbK75gIVjJ-zCh0PnwjVEAQYASABEgL7mfD_BwE&gclsrc=aw.ds">2-Gange Outlet and Switch Plate</a><br>
             <a href="https://en.wikipedia.org/wiki/AC_power_plugs_and_sockets">AC Plugs and Sockets</a><br>
             <a href="https://docs.broadcom.com/docs/ACHS-712x-DS101">ACHS 7122 (Current Sensor) Datasheet</a><br>
+            <a href="https://www.lowes.com/pd/Legrand-White-15-Amp-Duplex-Residential-Outlet/3235958">Duplex Outlet Socket</a><br>
             <a href="https://www.mouser.com/datasheet/2/307/g3ne_ds_e_4_1_csm166-1221231.pdf">G3NE-210T-US-DC5 (Relay) Datasheet</a><br>
+            <a href="https://en.wikipedia.org/wiki/Load_factor_(electrical)">Load Factor</a><br>
+            <a href="https://www.electronoobs.com/eng_circuitos_tut12.php">Non-invasive Current Clamp</a><br>
             <a href="https://www.lowes.com/pd/CARLON-2-Gang-Blue-PVC-New-Work-Standard-Switch-Outlet-Wall-Electrical-Box/50053877">PVC 2-Gang Outlet Box</a><br>
-            <a href="https://www.lowes.com/pd/Legrand-White-15-Amp-Duplex-Residential-Outlet/3235958">Duplet Outlet Socket</a><br>
-            <a href="https://www.lowes.com/pd/Eaton-15-Amp-Single-pole-White-Toggle-Residential-Light-Switch/1098293 ">SPST Switch 120V/15A</a><br>
-            <a href="https://www.lowes.com/pd/Legrand-2-Gang-White-Double-Standard-Wall-Plate/1000397809?cm_mmc=shp-_-c-_-prd-_-rpe-_-google-_-pla-_--_-soswiringdevices-_-1000397809-_-0&placeholder=null&gclid=EAIaIQobChMIodaLxbK75gIVjJ-zCh0PnwjVEAQYASABEgL7mfD_BwE&gclsrc=aw.ds">2-Gange Outlet and Switch Plate</a><br>
+            <a href="https://www.lowes.com/pd/Eaton-15-Amp-Single-pole-White-Toggle-Residential-Light-Switch/1098293">SPST Switch 120V/15A</a><br>
+            <a href="https://www.youtube.com/watch?v=wpAA3qeOYiI ">What is Hall Effect and How Hall Effect Sensors Work</a><br>
             <a href="https://nurdspace.nl/images/e/e0/ESP8266_Specifications_English.pdf">Considered: ESP8226 (Wifi Module) Datasheet</a><br>
-            
+
             <a name="Bumps"></a>
             <h3>Bumps in the Road</h3>
             <ul>
-            <li>The Raspberry Pi Zero W’s internet capabilities did not work with Cornell’s wi-fi.</li>
+            <li>The Raspberry Pi Zero W’s internet capabilities did not work with Cornell’s wi-fi. We were unable to forward a wifi connection through serial. </li>
             <li>Some electrical devices cause UART to send seemingly random characters.</li>
             <li>Using a small container for our device rather than a larger one made hardware debugging slightly more time consuming.</li>
             <li>The current sensor broke at one point, and we couldn’t get any oscilloscope readings, forcing us to replace it.</li>
@@ -334,7 +415,15 @@
             <a name="speed"></a>
             <h3>Speed</h3>
             <p>
-            Our UART sends a data point about once a second, and our web page containing the graph of the current readings as a function of time refreshes every five seconds. All commands sent through UART give virtually instant results. The delay between the actual current value and the data sent through UART is negligible when we remove the one second delay.
+            Our UART sends a data point about once a second, and our web page containing the graph of the current readings as a function of time refreshes every five seconds. All commands sent through UART give virtually instant results. With a baudrate of 9,600 we can transmit 1,200 bytes per second assuming peak efficiency but our PIC32 code prevents a serial command from being processed within 100ms after the response of another command has been handled. For humans typing into a serial interface this is fine but for our PySerial scripts this delay is present in those scripts as well. Since there are no other threads that demand ASAP utilization of the processor, we could have made the yield time shorter on our microcontroller or make our threads pre-emptive and use this for UART but we decided not to since the delay in pySerial code isn’t significant.
+            </p>
+            
+            <p>
+            Current limiting for a device that is consistently over it’s RMS limit takes about 1-2 seconds, responding fast enough to shut off client devices in case of accidental shorts or underestimated loads while forgiving client devices for any transient start up. 
+            </p>
+            
+            <p>
+            We did not measure the cycle duration of our interrupt or threads but none of these processes require quick or efficient computation. As such we took the lazy approach and did an expensive operation in our interrupt: multiplying a float. Assuming all other operations are negligible and using <a href="http://hades.mech.northwestern.edu/index.php/PIC32MX:_Benchmarking_Mathematical_Operations#Multiplication_.28Test_32.29">this</a> source we believe it would take 736ns to compute this. Although expensive, it would only prevent interrupts executing at 1.35MHz or above from timely finishing before the next interrupt. However this does hurt our CPU utilization time so we could improve this by using fixed point and computing the RMS current with this.
             </p>
             
             <a name="accuracy"></a>
@@ -342,19 +431,23 @@
             <img src="accuracy.PNG" alt="Accuracy data"
             style="width:500px;height:320px;">
             <p>
-            Our current readings were within about 11% of the expected results.The current sensor device itself has an error margin of 10%, so we think we’ve done a good job at keeping the error relatively low.
+            Our current readings were within about 11% of the expected results.The current sensor device itself has an error margin of 10%, so we think we’ve done a good job at keeping the error relatively low. We could slightly decrease the error on the PIC32 side by sampling at a faster rate, giving us more data points and less of a difference between our actual max/min and the one we were able to find through sampling but 50 data points per period seems to only increase the error by 1%.
             </p>
             
             <a name="safety"></a>
             <h3>Safety</h3>
             <p>
-            To ensure our project is a safe product, none of our wires were exposed, and they were well-insulated, both in the outlet box and outside of it. We made sure every connection besides those on the PIC32 were soldered well to avoid any open circuits. Our device also included a switch, which can turn off the device completely. In our UART program, our system starts with the relay off (r = 0) as an additional safeguard. Most of the wires used in this device are contained in a small PVC box that we screwed shut, so there’s absolutely no exposed wiring in our device. Finally, there’s a default current limit set when the device is connected, which is 5A. If the current sensor reads any current value higher than this, it will turn off the relay.
+            None of our wires in our power path are exposed and are well-insulated, in the box or outside of it. We also maintained a tag-out/lock-out system to prevent accidental electrocution. We made sure every connection besides those connecting between the PIC32 and Outlet box were soldered well to avoid any open circuits. Our device also included a switch, which can turn off the device completely. In our UART program, our system starts with the relay off (r = 0) as an additional safeguard. Most of the wires used in this device are contained in a small PVC box that we screwed shut, so there’s absolutely no exposed wiring in our device that’s on the 120V line. Finally, there’s a default current limit set when the device is connected, which is 5A. If the current sensor reads any current value higher than this, it will turn off the relay.
             </p>
             
             <a name="use"></a>
             <h3>Usability</h3>
             <p>
-            Our device starts with ‘safe’ default settings (the relay is off, current limit is 5A) for first-time users. When giving a command in the serial console, the result of the command is echoed back to the user, so that they can see if their command went through, and what the result of it was. The only way someone could hurt themselves using this device is by either breaking it open and ripping the insulation off, or sticking a piece of metal into the electrical outlets.
+            Our device starts with ‘safe’ default settings (the relay is off, current limit is 5A) for first-time users. When giving a command in the serial console, the result of the command is echoed back to the user, so that they can see if their command went through, and what the result of it was. However if the device pulls a significant amount of current, 10A or more, the Microcontroller will reset due to the ADC, the relay will remain on, and the client device will remain powered until our power path devices rated at 5A fails. This is a quick issue to patch as mentioned in the hardware section, either adjust the ADC voltage reference and/or adjust the filter between the current sensor and the ADC. This issue also caused weird characters to be printed on the serial interface. The only way someone could hurt themselves using this device (outside of the high load issue) is by either breaking it open and ripping the insulation off, or sticking a piece of metal into the electrical outlets.
+            </p>
+            
+            <p>
+            The Serial command interface is pretty limiting on who could use our device but at the same time python scripts could automate most of the commands given to the device and only require initial setup. Often we found ourselves debugging why the client devices weren’t receiving any power and realized we forgot something such as flipping the switch, connecting the relay wires to the inverter, or plugging in the Outlet Nanny itself. The status LEDs were a huge help to gauge what had power. 
             </p>
         
         <a name="conc"></a>
@@ -366,15 +459,29 @@
             </p>
             
             <p>
-            When we started this project, we expected Raspberry Pi implementation to not be the most difficult part, but for reasons we don’t really understand, our Raspberry Pi couldn’t work with Cornell’s wi-fi, that or it was broken. Because of this, our device must be wired to a computer to read the current values, which was not what we originally wanted.
+            When we started this project, we expected Raspberry Pi implementation to not be the most difficult part, but for reasons we don’t really understand, our Raspberry Pi Zero couldn’t work with Cornell’s wi-fi. Because of this, we switched to a Raspberry Pi 3 pretty late into our project and despite attempts to provide some wireless connection to the internet, including an AWS server that would act as a middleman between the client’s web browser and the raspberry pi, we were unable to setup a wireless connection in time that we could develop with. Had we not needed to remanufacture the Outlet box due to current sensor failure the saved time could have made the difference. In the end, our device must be wired to a computer to read the current values, which was not what we originally wanted.
             </p>
             
             <p>
-            We <i>did</i> expect the hardware work to be the most time-consuming part of our project, and that it was. As for hardware debugging, aside from needing to replace the current sensor because our first one was fried, we hit our goal of not having to do much in that regard.
+            We <i>did</i> expect the hardware work to be the most time-consuming part of our project, and that it was. As for hardware debugging, aside from needing to replace the current sensor because our first one was fried, we hit our goal.
+            </p>
+            
+            <a name="futureimprovements"></a>
+            <h3>Improvements and in Hindsight</h3>
+            <p>
+            We could improve our device on three fronts, remote access, improved data processing, and fixing the current sensing flaw if under high load.
+            </p>
+           
+            <p>
+            Our project intended to have Wi-fi connectivity so a client could monitor and control their devices. To provide that we may be dropping any consideration of a Raspberry Pi and using a ESP8226 Module, as well as make our web GUI look much more appealing, and be able to control the device without typing into a console. We haven’t looked into this alternative too much but would save us in terms of device overhead power consumption but would rely on PIC32 code to connect us to a server and a server to connect to such as Google Cloud. In hindsight we realized that the Pi Zero W uses WLAN which requires another device with WLAN and internet to connect the raspberry pi to the internet while the Pi 3 can connect to the internet via Wi-Fi or Ethernet but dissipates so much power. 
             </p>
             
             <p>
-            If we had to improve upon or extend our project, we would definitely figure out how to implement the Raspberry Pi and wi-fi functionality, as well as make our web GUI look much more appealing, and be able to control the device without typing into a console. FFT also could be considered if time permitted and if we were sure that it would even improve our results.
+            FFT could also be considered so we could not only measure the current sensor at the line’s fundamental frequency but it’s harmonics too to determine the client device(s)’s power factor and reporting back it’s maximum possible efficiency. This feature would require a lot more data processing and computation on our PIC32.
+            </p>
+            
+            <p>
+            The last feature change would be to account for high load device current draw and to be able to handle the full sweep of the current sensor’s output on our PIC32 ADC. The easiest and quickest fix is to place a resistor in parrallel with the low pass’s capacitor to have a voltage divider for our pass through frequencies but we’d need to readjust our equation to adjust an ADC reading to an RMS current. This is the least costly to readjust.
             </p>
             
             <a name="safetystandards"></a>
@@ -396,23 +503,22 @@
             <li>We have followed standard IEEE safety precautions when working with this project.</li>
             </ul>
             
+            <a name="legal"></a>
+            <h3>Legal Considerations</h3>
+            We would like to warn all attempting this project that it involves live AC supplies and the danger of electrocution. Practice electrical safety if you attempt this or a similar project and we are not accountable for the effect our device has on your health and/or devices.
+            
         <a name="Appendix"></a>
         <h2>Appendix</h2>
         <p>The group approves this report for inclusion on the course website.</p>
         <p>The group approves the video for inclusion on the course youtube channel.</p>
         
             <h3>Program Listing</h3>
-                <h4>Main PIC32 Code (C)</h4>
-                <script src="https://gist.github.coecis.cornell.edu/sa854/02f1bfe4bb95721645039193cc85bb31.js"></script>
+                <h4><a href="https://raw.github.coecis.cornell.edu/sih28/ece4760-final-project/master/Big_board_pt_1_3_2/main_4760_final.c?token=AAABN6YGYP3VNBVLP4QA5ZC6AMTKA">Main PIC32 Code (C)</a></h4>
                 
-                <h4>Serial Input Code (Python)</h4>
-                <script src="https://gist.github.coecis.cornell.edu/sa854/1076f20a1d3a5af53e89a9eecda933fe.js"></script>
+                <h4><a href="https://raw.github.coecis.cornell.edu/sih28/ece4760-final-project/master/raspberrypicode/sera.py?token=AAABN64KYWX7ZSTY65JVWFC6AMTRY">Serial Input Code (Python)</a></h4>
                 
-                <h4>Current Plotting Code (Python)</h4>
-                <script src="https://gist.github.coecis.cornell.edu/sa854/c6571ed1ee67a54ce8ab19057522a352.js"></script>
+                <h4><a href="https://raw.github.coecis.cornell.edu/sih28/ece4760-final-project/master/raspberrypicode/serial_and_pyplot.py?token=AAABN667GXWH2TBE5JJ6ZN26AMTOG">Current Plotting Code (Python)</a></h4>
                 
-                <!--<h4>Edited pt_cornell_1_3_2.h</h4>
-                <script src="https://gist.github.coecis.cornell.edu/sa854/6608aff0b39048ff4e2c97c5667d2ca5.js"></script>-->
             
             <h3>Hardware Schematics</h3>
             <img src="outletbox_schem.png" alt="Outlet box"
@@ -421,20 +527,21 @@
             style="width:760px;height:400px;">
             
             <h3>Full Source Listing</h3>
-            <a href="https://pyserial.readthedocs.io/">pySerial Library and Examples</a><br>
-            <a href="https://matplotlib.org/">Matplotlib Library and Examples</a><br>
-            <a href="http://people.ece.cornell.edu/land/courses/ece4760/">Professor Land’s ADC/UART code (Labs 2 and 3) and his Protothreads interface</a><br>
-            <a href="http://people.ece.cornell.edu/land/courses/ece4760/PIC32/index_UART.html">Universal Asynchronous Receiver-Transmitter (UART) Serial</a><br>
-            <a href="http://people.ece.cornell.edu/land/courses/ece4760/PIC32/index_ADC.html">Analog-to-Digital Converter</a><br>
+            <a href="https://archive.org/details/gov.law.nfpa.nec.2014/page/n5">2014 National Electrical Code</a><br>
+            <a href="https://www.lowes.com/pd/Legrand-2-Gang-White-Double-Standard-Wall-Plate/1000397809?cm_mmc=shp-_-c-_-prd-_-rpe-_-google-_-pla-_--_-soswiringdevices-_-1000397809-_-0&placeholder=null&gclid=EAIaIQobChMIodaLxbK75gIVjJ-zCh0PnwjVEAQYASABEgL7mfD_BwE&gclsrc=aw.ds">2-Gange Outlet and Switch Plate</a><br>
             <a href="https://en.wikipedia.org/wiki/AC_power_plugs_and_sockets">AC Plugs and Sockets</a><br>
             <a href="https://docs.broadcom.com/docs/ACHS-712x-DS101">ACHS 7122 (Current Sensor) Datasheet</a><br>
+            <a href="https://www.lowes.com/pd/Legrand-White-15-Amp-Duplex-Residential-Outlet/3235958">Duplex Outlet Socket</a><br>
             <a href="https://www.mouser.com/datasheet/2/307/g3ne_ds_e_4_1_csm166-1221231.pdf">G3NE-210T-US-DC5 (Relay) Datasheet</a><br>
+            <a href="https://en.wikipedia.org/wiki/Load_factor_(electrical)">Load Factor</a><br>
+            <a href="https://matplotlib.org/">Matplotlib Library and Examples</a><br>
+            <a href="https://www.electronoobs.com/eng_circuitos_tut12.php">Non-invasive Current Clamp</a><br>
+            <a href="http://people.ece.cornell.edu/land/courses/ece4760/">Professor Land’s ADC/UART code (Labs 2 and 3) and his Protothreads interface</a><br>
             <a href="https://www.lowes.com/pd/CARLON-2-Gang-Blue-PVC-New-Work-Standard-Switch-Outlet-Wall-Electrical-Box/50053877">PVC 2-Gang Outlet Box</a><br>
-            <a href="https://www.lowes.com/pd/Legrand-White-15-Amp-Duplex-Residential-Outlet/3235958">Duplet Outlet Socket</a><br>
-            <a href="https://www.lowes.com/pd/Eaton-15-Amp-Single-pole-White-Toggle-Residential-Light-Switch/1098293 ">SPST Switch 120V/15A</a><br>
-            <a href="https://www.lowes.com/pd/Legrand-2-Gang-White-Double-Standard-Wall-Plate/1000397809?cm_mmc=shp-_-c-_-prd-_-rpe-_-google-_-pla-_--_-soswiringdevices-_-1000397809-_-0&placeholder=null&gclid=EAIaIQobChMIodaLxbK75gIVjJ-zCh0PnwjVEAQYASABEgL7mfD_BwE&gclsrc=aw.ds">2-Gange Outlet and Switch Plate</a><br>
+            <a href="https://pyserial.readthedocs.io/">pySerial Library and Examples</a><br>
+            <a href="https://www.lowes.com/pd/Eaton-15-Amp-Single-pole-White-Toggle-Residential-Light-Switch/1098293">SPST Switch 120V/15A</a><br>
+            <a href="https://www.youtube.com/watch?v=wpAA3qeOYiI ">What is Hall Effect and How Hall Effect Sensors Work</a><br>
             <a href="https://nurdspace.nl/images/e/e0/ESP8266_Specifications_English.pdf">Considered: ESP8226 (Wifi Module) Datasheet</a><br>
-
 
 </body>
 </html>

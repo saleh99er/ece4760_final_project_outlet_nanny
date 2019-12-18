@@ -2904,6 +2904,12 @@ a[href='#icon-zoom-in']::before {
 
 a[href='#icon-zoom-out']::before {
     background-position: 0 -12818px;
-} 
+}
+
+.header {
+  background-color: #bcbcbc;
+  text-align: center;
+  padding: 4px;
+}
 
 /* ==Boxed reddit CSS Theme v1.9.0 - (http://www.reddit.com/r/boxed/)== */
